@@ -44,8 +44,12 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
                 recipesRemoteDataSource.get(new ResultsCallback<RecipeModel>() {
                     @Override
                     public void onLoaded(List<RecipeModel> result) {
-                        callback.onLoaded(result);
-                        // TODO: Save data
+                        if (result != null && result.size() > 0) {
+                            callback.onLoaded(result);
+                            recipesLocalDataSource.save(result.toArray(new RecipeModel[result.size()]));
+                        } else {
+                            callback.onDataNotAvailable();
+                        }
                     }
 
                     @Override
