@@ -36,10 +36,10 @@ public abstract class PiCrustDatabase extends RoomDatabase {
         }
     }
 
-    public abstract RecipeDao recipeDao();
+    public abstract RecipesDao recipesDao();
 
-    public abstract IngredientDao ingredientDao();
+    public abstract IngredientsDao ingredientsDao();
 
-    public abstract StepDao stepDao();
+    public abstract StepsDao stepsDao();
 
 }

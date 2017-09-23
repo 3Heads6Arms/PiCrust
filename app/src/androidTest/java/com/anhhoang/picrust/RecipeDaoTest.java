@@ -47,10 +47,10 @@ public class RecipeDaoTest {
 
     @Test
     public void shouldInsertTestAndGet() {
-        piCrustDatabase.recipeDao().insert(EXPECTED_RECIPE);
+        piCrustDatabase.recipesDao().insert(EXPECTED_RECIPE);
 
-        List<RecipeModel> recipes = piCrustDatabase.recipeDao().getAll();
-        RecipeModel recipe = piCrustDatabase.recipeDao().get(EXPECTED_RECIPE.getId());
+        List<RecipeModel> recipes = piCrustDatabase.recipesDao().getAll();
+        RecipeModel recipe = piCrustDatabase.recipesDao().get(EXPECTED_RECIPE.getId());
 
         assertThat(recipes.size(), is(1));
         assertNotNull(recipe);
@@ -59,11 +59,11 @@ public class RecipeDaoTest {
 
     @Test
     public void shouldInsertRecipeWithIngredientsAndSteps() {
-        piCrustDatabase.recipeDao().insert(EXPECTED_RECIPE);
-        piCrustDatabase.ingredientDao().insert(EXPECTED_INGREDIENT_1, EXPECTED_INGREDIENT_2);
-        piCrustDatabase.stepDao().insert(EXPECTED_STEP_1, EXPECTED_STEP_2);
+        piCrustDatabase.recipesDao().insert(EXPECTED_RECIPE);
+        piCrustDatabase.ingredientsDao().insert(EXPECTED_INGREDIENT_1, EXPECTED_INGREDIENT_2);
+        piCrustDatabase.stepsDao().insert(EXPECTED_STEP_1, EXPECTED_STEP_2);
 
-        RecipeModel recipe = piCrustDatabase.recipeDao().get(1);
+        RecipeModel recipe = piCrustDatabase.recipesDao().get(1);
         assertNotNull(recipe);
         assertNotNull(recipe.ingredients);
         assertThat(recipe.ingredients.size(), is(2));

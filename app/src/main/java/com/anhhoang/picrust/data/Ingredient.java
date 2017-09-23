@@ -63,4 +63,8 @@ public class Ingredient {
     public int getRecipeId() {
         return recipeId;
     }
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
+    }
 }

@@ -5,20 +5,23 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.anhhoang.picrust.data.Ingredient;
+import com.anhhoang.picrust.data.Recipe;
+import com.anhhoang.picrust.data.models.RecipeModel;
 
 import java.util.List;
-
 
 /**
  * Created by anh.hoang on 9/22/17.
  */
 
 @Dao
-public interface IngredientDao {
-    @Query("Select * from ingredients where recipeId = :recipeId")
-    List<Ingredient> getAll(int recipeId);
+public interface RecipesDao {
+    @Query("SELECT * from recipes")
+    List<RecipeModel> getAll();
+
+    @Query("SELECT * from recipes where id = :id")
+    RecipeModel get(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Ingredient... ingredients);
+    void insert(Recipe... recipes);
 }

@@ -11,6 +11,8 @@ public interface BaseDataSource<T> {
 
     void get(int id, ResultCallback<T> callback);
 
+    void save(T... entities);
+
     interface ResultsCallback<T> {
         void onLoaded(List<T> result);
 

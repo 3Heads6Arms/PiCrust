@@ -28,7 +28,7 @@ public class Step {
     @Nullable
     private final String thumbnailURL;
 
-    private final int recipeId;
+    private int recipeId;
 
     public Step(int id, @NonNull String shortDescription, @NonNull String description, @Nullable String videoURL, @Nullable String thumbnailURL, int recipeId) {
         this.id = id;
@@ -63,5 +63,9 @@ public class Step {
 
     public int getRecipeId() {
         return recipeId;
+    }
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.anhhoang.picrust.recipes.RecipesActivity">
+    tools:context=".ui.recipes.RecipesActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
 
         <fragment
             android:id="@+id/recipes_fragment"
-            android:name="com.anhhoang.picrust.recipes.RecipesActivityFragment"
+            android:name="com.anhhoang.picrust.ui.recipes.RecipesFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

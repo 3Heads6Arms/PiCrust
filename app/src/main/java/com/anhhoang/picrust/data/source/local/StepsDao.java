@@ -5,8 +5,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.anhhoang.picrust.data.Recipe;
-import com.anhhoang.picrust.data.models.RecipeModel;
+import com.anhhoang.picrust.data.Step;
 
 import java.util.List;
 
@@ -15,13 +14,10 @@ import java.util.List;
  */
 
 @Dao
-public interface RecipeDao {
-    @Query("SELECT * from recipes")
-    List<RecipeModel> getAll();
-
-    @Query("SELECT * from recipes where id = :id")
-    RecipeModel get(int id);
+public interface StepsDao {
+    @Query("select * from steps where recipeId=:recipeId")
+    List<Step> getAll(int recipeId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Recipe... recipes);
+    void insert(Step... steps);
 }
