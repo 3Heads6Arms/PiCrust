@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.anhhoang.picrust.R;
-import com.anhhoang.picrust.data.Recipe;
+import com.anhhoang.picrust.data.models.RecipeModel;
 
 import java.util.List;
 
@@ -40,9 +40,15 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
-        ButterKnife.bind(view);
+        ButterKnife.bind(this, view);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.start();
     }
 
     @Override
@@ -51,7 +57,7 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View {
     }
 
     @Override
-    public void setLoadingIndicator(boolean isLoading) {
+    public void showLoadingIndicator(boolean isLoading) {
         if (isLoading) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
@@ -60,17 +66,17 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View {
     }
 
     @Override
-    public void showRecipes(List<Recipe> recipes) {
-
+    public void showRecipes(List<RecipeModel> recipes) {
+        // TODO: Populate RecyclerView
     }
 
     @Override
-    public void setErrorView(boolean hasError, RecipeErrorEnum errorType) {
-
+    public void showErrorView(boolean hasError, RecipeErrorEnum errorType) {
+        // TODO: Show Error view accordingly
     }
 
     @Override
     public void showRecipeDetail(int recipeId) {
-
+        // TODO: Switch to detail Activity
     }
 }

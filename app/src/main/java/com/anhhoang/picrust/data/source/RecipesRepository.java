@@ -13,8 +13,8 @@ import java.util.List;
 public class RecipesRepository implements BaseDataSource<RecipeModel> {
     private static RecipesRepository INSTANCE;
 
-    BaseDataSource<RecipeModel> recipesLocalDataSource;
-    BaseDataSource<RecipeModel> recipesRemoteDataSource;
+    private BaseDataSource<RecipeModel> recipesLocalDataSource;
+    private BaseDataSource<RecipeModel> recipesRemoteDataSource;
 
     private RecipesRepository(@NonNull BaseDataSource<RecipeModel> recipesLocalDataSource,
                               @NonNull BaseDataSource<RecipeModel> recipesRemoteDataSource) {
@@ -45,8 +45,8 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
                     @Override
                     public void onLoaded(List<RecipeModel> result) {
                         if (result != null && result.size() > 0) {
-                            callback.onLoaded(result);
                             recipesLocalDataSource.save(result.toArray(new RecipeModel[result.size()]));
+                            callback.onLoaded(result);
                         } else {
                             callback.onDataNotAvailable();
                         }

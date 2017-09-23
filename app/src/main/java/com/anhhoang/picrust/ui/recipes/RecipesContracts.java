@@ -2,7 +2,7 @@ package com.anhhoang.picrust.ui.recipes;
 
 import com.anhhoang.picrust.BasePresenter;
 import com.anhhoang.picrust.BaseView;
-import com.anhhoang.picrust.data.Recipe;
+import com.anhhoang.picrust.data.models.RecipeModel;
 
 import java.util.List;
 
@@ -10,14 +10,14 @@ import java.util.List;
  * Created by anh.hoang on 9/23/17.
  */
 
-public class RecipesContracts {
+class RecipesContracts {
 
     interface View extends BaseView<Presenter> {
-        void setLoadingIndicator(boolean isLoading);
+        void showLoadingIndicator(boolean isLoading);
 
-        void showRecipes(List<Recipe> recipes);
+        void showRecipes(List<RecipeModel> recipes);
 
-        void setErrorView(boolean hasError, RecipeErrorEnum errorType);
+        void showErrorView(boolean hasError, RecipeErrorEnum errorType);
 
         void showRecipeDetail(int recipeId);
     }
@@ -25,6 +25,6 @@ public class RecipesContracts {
     interface Presenter extends BasePresenter {
         void loadRecipes(boolean forceUpdate);
 
-        void openRecipeDetail(Recipe recipe);
+        void openRecipeDetail(RecipeModel recipe);
     }
 }

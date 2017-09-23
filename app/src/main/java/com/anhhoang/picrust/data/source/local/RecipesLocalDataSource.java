@@ -81,22 +81,27 @@ public class RecipesLocalDataSource implements BaseDataSource<RecipeModel> {
     /**
      * Insert Recipe, its required ingredients and steps to DB
      *
-     * @param entities
+     * @param entities - RecipeModel, contains detail about the recipe
      */
     @Override
-    public void save(RecipeModel... entities) {
-        for (RecipeModel model : entities) {
-            piCrustDatabase.recipesDao().insert(model.recipe);
+    public void save(final RecipeModel... entities) {
+        executor.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                for (RecipeModel model : entities) {
+                    piCrustDatabase.recipesDao().insert(model.recipe);
 
-            for (Step step : model.steps) {
-                step.setRecipeId(model.recipe.getId());
-            }
-            piCrustDatabase.stepsDao().insert(model.steps.toArray(new Step[model.steps.size()]));
+                    for (Step step : model.steps) {
+                        step.setRecipeId(model.recipe.getId());
+                    }
+                    piCrustDatabase.stepsDao().insert(model.steps.toArray(new Step[model.steps.size()]));
 
-            for (Ingredient ingredient : model.ingredients) {
-                ingredient.setRecipeId(model.recipe.getId());
+                    for (Ingredient ingredient : model.ingredients) {
+                        ingredient.setRecipeId(model.recipe.getId());
+                    }
+                    piCrustDatabase.ingredientsDao().insert(model.ingredients.toArray(new Ingredient[model.ingredients.size()]));
+                }
             }
-            piCrustDatabase.ingredientsDao().insert(model.ingredients.toArray(new Ingredient[model.ingredients.size()]));
-        }
+        });
     }
 }
