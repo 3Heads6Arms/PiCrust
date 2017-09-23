@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class RecipesFragment extends Fragment implements RecipesContracts.View {
+public class RecipesFragment extends Fragment implements RecipesContracts.View, RecipesAdapter.OnClickListener {
     @BindView(R.id.recipes_recycler_view)
     RecyclerView rvRecipes;
     @BindView(R.id.error_view)
@@ -31,7 +31,9 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View {
     TextView tvErrorDescription;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+
     private RecipesContracts.Presenter presenter;
+    private RecipesAdapter recipesAdapter;
 
     public RecipesFragment() {
     }
@@ -41,6 +43,9 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         ButterKnife.bind(this, view);
+
+        recipesAdapter = new RecipesAdapter(null, R.layout.recipe_item_list_view, this);
+        rvRecipes.setAdapter(recipesAdapter);
 
         return view;
     }
@@ -67,16 +72,29 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View {
 
     @Override
     public void showRecipes(List<RecipeModel> recipes) {
-        // TODO: Populate RecyclerView
+        recipesAdapter.setRecipes(recipes);
     }
 
     @Override
     public void showErrorView(boolean hasError, RecipeErrorEnum errorType) {
-        // TODO: Show Error view accordingly
+        if (hasError) {
+            String errorText;
+            String errorDescriptionText;
+            // TODO: Show Error text
+
+            errorView.setVisibility(View.VISIBLE);
+        } else {
+            errorView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showRecipeDetail(int recipeId) {
         // TODO: Switch to detail Activity
+    }
+
+    @Override
+    public void onClick(RecipeModel recipeModel) {
+        presenter.openRecipeDetail(recipeModel);
     }
 }

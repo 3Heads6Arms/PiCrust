@@ -34,16 +34,27 @@ class RecipesPresenter implements RecipesContracts.Presenter {
         }
 
         view.showLoadingIndicator(true);
+        view.showErrorView(false, null);
         repository.get(new BaseDataSource.ResultsCallback<RecipeModel>() {
             @Override
             public void onLoaded(List<RecipeModel> result) {
-                view.showRecipes(result);
                 view.showLoadingIndicator(false);
+                view.showErrorView(false, null);
+                view.showRecipes(result);
             }
 
             @Override
-            public void onDataNotAvailable() {
-                view.showErrorView(true, RecipeErrorEnum.EMPTY);
+            public void onDataNotAvailable(Object additionalInfo) {
+                RecipeErrorEnum recipeErrorEnum = RecipeErrorEnum.EMPTY;
+                if (additionalInfo == null) {
+                    recipeErrorEnum = RecipeErrorEnum.EMPTY;
+                } else if (additionalInfo instanceof Integer) {
+                    recipeErrorEnum = RecipeErrorEnum.OTHER; // Server error
+                } else if (additionalInfo instanceof Throwable) {
+                    recipeErrorEnum = RecipeErrorEnum.NETWORK; // needs more testing to verify
+                }
+
+                view.showErrorView(true, recipeErrorEnum);
                 view.showLoadingIndicator(false);
             }
         });
