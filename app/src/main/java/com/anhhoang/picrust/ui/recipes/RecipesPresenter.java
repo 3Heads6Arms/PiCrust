@@ -30,6 +30,10 @@ class RecipesPresenter implements RecipesContracts.Presenter {
 
     @Override
     public void loadRecipes(boolean forceUpdate) {
+        if (forceUpdate) {
+            repository.refresh();
+        }
+
         view.showLoadingIndicator(true);
         repository.get(new BaseDataSource.ResultsCallback<RecipeModel>() {
             @Override
@@ -48,6 +52,6 @@ class RecipesPresenter implements RecipesContracts.Presenter {
 
     @Override
     public void openRecipeDetail(RecipeModel recipe) {
-
+        // TODO:
     }
 }

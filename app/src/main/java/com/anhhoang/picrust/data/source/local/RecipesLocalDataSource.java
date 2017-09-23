@@ -6,6 +6,7 @@ import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.data.source.BaseDataSource;
 import com.anhhoang.picrust.utils.AppExecutor;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -84,7 +85,7 @@ public class RecipesLocalDataSource implements BaseDataSource<RecipeModel> {
      * @param entities - RecipeModel, contains detail about the recipe
      */
     @Override
-    public void save(final RecipeModel... entities) {
+    public void save(final Collection<RecipeModel> entities) {
         executor.diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -103,5 +104,10 @@ public class RecipesLocalDataSource implements BaseDataSource<RecipeModel> {
                 }
             }
         });
+    }
+
+    @Override
+    public void refresh() {
+        // DB does not require refresh
     }
 }

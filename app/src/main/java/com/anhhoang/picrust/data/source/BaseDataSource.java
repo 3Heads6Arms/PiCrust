@@ -1,5 +1,6 @@
 package com.anhhoang.picrust.data.source;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -11,7 +12,9 @@ public interface BaseDataSource<T> {
 
     void get(int id, ResultCallback<T> callback);
 
-    void save(T... entities);
+    void save(Collection<T> entities);
+
+    void refresh();
 
     interface ResultsCallback<T> {
         void onLoaded(List<T> result);

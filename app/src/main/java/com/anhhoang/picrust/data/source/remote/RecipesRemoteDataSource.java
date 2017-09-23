@@ -8,6 +8,7 @@ import com.anhhoang.picrust.data.source.BaseDataSource;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -84,7 +85,12 @@ public class RecipesRemoteDataSource implements BaseDataSource<RecipeModel> {
     }
 
     @Override
-    public void save(RecipeModel... entities) {
+    public void refresh() {
+        throw new UnsupportedOperationException(RecipesRemoteDataSource.class.getSimpleName() + " does not support such operation.");
+    }
+
+    @Override
+    public void save(Collection<RecipeModel> entities) {
         throw new UnsupportedOperationException(RecipesRemoteDataSource.class.getSimpleName() + " does not support such operation.");
     }
 }
