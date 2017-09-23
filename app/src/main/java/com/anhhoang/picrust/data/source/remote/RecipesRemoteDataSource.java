@@ -68,13 +68,13 @@ public class RecipesRemoteDataSource implements BaseDataSource<RecipeModel> {
 
                             callback.onLoaded(recipes);
                         } else {
-                            callback.onDataNotAvailable();
+                            callback.onDataNotAvailable(response.code());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<List<RecipeRequest>> call, Throwable t) {
-                        callback.onDataNotAvailable();
+                        callback.onDataNotAvailable(t);
                     }
                 });
     }

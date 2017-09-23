@@ -2,7 +2,6 @@ package com.anhhoang.picrust.ui.recipes;
 
 import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.data.source.BaseDataSource;
-import com.anhhoang.picrust.data.source.RecipesRepository;
 
 import java.util.List;
 
@@ -14,9 +13,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 class RecipesPresenter implements RecipesContracts.Presenter {
     private RecipesContracts.View view;
-    private RecipesRepository repository;
+    private BaseDataSource<RecipeModel> repository;
 
-    RecipesPresenter(RecipesContracts.View view, RecipesRepository repository) {
+    RecipesPresenter(RecipesContracts.View view, BaseDataSource<RecipeModel> repository) {
         this.view = checkNotNull(view);
         this.repository = checkNotNull(repository);
 

@@ -19,12 +19,12 @@ public interface BaseDataSource<T> {
     interface ResultsCallback<T> {
         void onLoaded(List<T> result);
 
-        void onDataNotAvailable();
+        void onDataNotAvailable(Object additionalInfo);
     }
 
     interface ResultCallback<T> {
         void onLoaded(T result);
 
-        void onDataNotAvailable();
+        void onDataNotAvailable(Object additionalInfo);
     }
 }

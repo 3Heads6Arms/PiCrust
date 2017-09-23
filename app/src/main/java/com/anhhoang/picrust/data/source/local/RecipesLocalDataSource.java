@@ -47,7 +47,7 @@ public class RecipesLocalDataSource implements BaseDataSource<RecipeModel> {
                                         if (recipes != null && recipes.size() > 0) {
                                             callback.onLoaded(recipes);
                                         } else {
-                                            callback.onDataNotAvailable();
+                                            callback.onDataNotAvailable(null);
                                         }
                                     }
                                 });
@@ -71,7 +71,7 @@ public class RecipesLocalDataSource implements BaseDataSource<RecipeModel> {
                                         if (recipe != null) {
                                             callback.onLoaded(recipe);
                                         } else {
-                                            callback.onDataNotAvailable();
+                                            callback.onDataNotAvailable(null);
                                         }
                                     }
                                 });

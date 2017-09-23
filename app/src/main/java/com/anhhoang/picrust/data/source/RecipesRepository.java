@@ -56,7 +56,7 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
                 }
 
                 @Override
-                public void onDataNotAvailable() {
+                public void onDataNotAvailable(Object additionalInfo) {
                     getFromRemote(callback);
                 }
             });
@@ -87,13 +87,13 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
                     recipesLocalDataSource.save(result);
                     callback.onLoaded(result);
                 } else {
-                    callback.onDataNotAvailable();
+                    callback.onDataNotAvailable(null);
                 }
             }
 
             @Override
-            public void onDataNotAvailable() {
-                callback.onDataNotAvailable();
+            public void onDataNotAvailable(Object additionalInfo) {
+                callback.onDataNotAvailable(additionalInfo);
             }
         });
     }
