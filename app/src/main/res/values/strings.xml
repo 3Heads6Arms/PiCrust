@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Pi Crust</string>
+    <string name="title_activity_recipes">RecipesActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="recipes_layout_manager" translatable="false">android.support.v7.widget.LinearLayoutManager</string>
+    <string name="empty_recipes_list">Recipes are missing!</string>
+    <string name="empty_recipes_list_description">We need to ask our chiefs to share their secrets.</string>
 </resources>
