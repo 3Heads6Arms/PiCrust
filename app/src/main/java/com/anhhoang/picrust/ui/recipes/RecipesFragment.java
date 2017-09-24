@@ -80,6 +80,9 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View, 
 
     @Override
     public void setPresenter(RecipesContracts.Presenter presenter) {
+        // When fragment instance is retained, the presenter might not be null.
+        // The fragment can continue using the old one, or operate with the new one.
+        // The repository is singleton and have implemented "caching" and won't do another db call.
         this.presenter = presenter;
     }
 

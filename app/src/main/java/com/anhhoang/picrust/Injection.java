@@ -39,7 +39,8 @@ public class Injection {
                 StepsLocalDataSource.getInstance(
                         new AppExecutor(),
                         PiCrustDatabase.getInstance(context).stepsDao(),
-                        recipeId));
+                        recipeId),
+                recipeId);
 
         return stepsRepository;
     }
