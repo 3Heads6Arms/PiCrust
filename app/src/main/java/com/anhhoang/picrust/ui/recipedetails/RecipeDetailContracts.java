@@ -22,7 +22,7 @@ public class RecipeDetailContracts {
     }
 
     interface Presenter extends BasePresenter {
-        void loadRecipe();
+        void loadRecipe(int recipeId);
 
         void openIngredients(Recipe recipe);
 
