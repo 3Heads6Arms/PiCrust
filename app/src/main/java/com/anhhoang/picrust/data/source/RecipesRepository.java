@@ -104,8 +104,10 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
         }
         cachedRecipes.clear();
 
-        for (RecipeModel recipe : recipes) {
-            cachedRecipes.put(recipe.recipe.getId(), recipe);
+        if (recipes != null) {
+            for (RecipeModel recipe : recipes) {
+                cachedRecipes.put(recipe.recipe.getId(), recipe);
+            }
         }
     }
 }

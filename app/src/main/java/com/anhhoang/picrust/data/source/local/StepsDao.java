@@ -15,8 +15,11 @@ import java.util.List;
 
 @Dao
 public interface StepsDao {
-    @Query("select * from steps where recipeId=:recipeId")
+    @Query("select * from steps where recipeId = :recipeId")
     List<Step> getAll(int recipeId);
+
+    @Query("select * from steps where recipeId = :recipeId and id = :stepId limit 1")
+    Step get(int recipeId, int stepId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Step... steps);
