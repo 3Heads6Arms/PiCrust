@@ -1,5 +1,7 @@
 package com.anhhoang.picrust.ui.recipedetails;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +12,14 @@ import android.view.View;
 import com.anhhoang.picrust.R;
 
 public class RecipeDetailActivity extends AppCompatActivity {
+    public static final String EXTRA_RECIPE_ID = "ExtraRecipeId";
+
+    public static Intent getStartingIntent(Context context, int recipeId) {
+        Intent intent = new Intent(context, RecipeDetailActivity.class);
+        intent.putExtra(EXTRA_RECIPE_ID, recipeId);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,5 +38,4 @@ public class RecipeDetailActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
 }

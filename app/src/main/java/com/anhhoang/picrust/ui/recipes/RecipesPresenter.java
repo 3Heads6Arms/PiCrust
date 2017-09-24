@@ -62,6 +62,6 @@ class RecipesPresenter implements RecipesContracts.Presenter {
 
     @Override
     public void openRecipeDetail(RecipeModel recipe) {
-        // TODO:
+        view.showRecipeDetail(recipe.recipe.getId());
     }
 }

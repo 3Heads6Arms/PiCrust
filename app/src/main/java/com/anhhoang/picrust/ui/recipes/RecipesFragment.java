@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.data.models.RecipeModel;
+import com.anhhoang.picrust.ui.recipedetails.RecipeDetailActivity;
 
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View, 
 
     @Override
     public void showRecipeDetail(int recipeId) {
-        // TODO: Switch to detail Activity
+        startActivity(RecipeDetailActivity.getStartingIntent(getContext(), recipeId));
     }
 
     @Override
