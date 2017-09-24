@@ -14,6 +14,8 @@ import com.anhhoang.picrust.data.models.RecipeModel;
  */
 public class RecipeDetailFragment extends Fragment implements RecipeDetailContracts.View {
 
+    private RecipeDetailContracts.Presenter presenter;
+
     public RecipeDetailFragment() {
     }
 
@@ -25,7 +27,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
 
     @Override
     public void setPresenter(RecipeDetailContracts.Presenter presenter) {
-        // TODO:
+        this.presenter = presenter;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
 
     @Override
     public void showDetail(RecipeModel recipeModel) {
-        // TODO:
+        // TODO: load to menu
     }
 
     @Override

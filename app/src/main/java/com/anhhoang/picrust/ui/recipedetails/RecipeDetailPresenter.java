@@ -6,6 +6,8 @@ import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.data.source.BaseDataSource;
 import com.anhhoang.picrust.ui.recipedetails.RecipeDetailContracts.Presenter;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Created by anh.hoang on 9/24/17.
  */
@@ -13,15 +15,18 @@ import com.anhhoang.picrust.ui.recipedetails.RecipeDetailContracts.Presenter;
 public class RecipeDetailPresenter implements Presenter {
     private final RecipeDetailContracts.View view;
     private final BaseDataSource<RecipeModel> repository;
+    private final int recipeId;
 
-    public RecipeDetailPresenter(RecipeDetailContracts.View view, BaseDataSource<RecipeModel> repository) {
+    public RecipeDetailPresenter(RecipeDetailContracts.View view, BaseDataSource<RecipeModel> repository, int recipeId) {
         this.view = view;
         this.repository = repository;
+        this.recipeId = recipeId;
         view.setPresenter(this);
     }
 
     @Override
     public void start() {
+        loadRecipe(recipeId);
     }
 
     @Override
@@ -29,12 +34,13 @@ public class RecipeDetailPresenter implements Presenter {
         repository.get(recipeId, new BaseDataSource.ResultCallback<RecipeModel>() {
             @Override
             public void onLoaded(RecipeModel result) {
-                // TODO: show data
+                checkNotNull(result, "Detail screen, data cannot be null");
+                view.showDetail(result);
             }
 
             @Override
             public void onDataNotAvailable(Object additionalInfo) {
-                // TODO: Show problem
+                throw new RuntimeException("Detail screen must have recipe data.");
             }
         });
     }
