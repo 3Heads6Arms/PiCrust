@@ -1,7 +1,10 @@
 package com.anhhoang.picrust.ui.recipes;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +39,7 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View, 
     private RecipesAdapter recipesAdapter;
 
     public RecipesFragment() {
+        setRetainInstance(true);
     }
 
     @Override
@@ -43,9 +47,26 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View, 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         ButterKnife.bind(this, view);
+        Configuration configuration = getContext().getResources().getConfiguration();
 
-        recipesAdapter = new RecipesAdapter(null, R.layout.recipe_item_list_view, this);
+        if (recipesAdapter == null) { // fragment instance is retained, may not required to create new adapter
+            recipesAdapter = new RecipesAdapter(null, R.layout.recipe_item_view, this);
+        }
+
         rvRecipes.setAdapter(recipesAdapter);
+        rvRecipes.setHasFixedSize(true);
+        // Set displaying option
+        if (configuration.smallestScreenWidthDp < 600) {
+            rvRecipes.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        } else {
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) rvRecipes.getLayoutManager();
+
+            if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                gridLayoutManager.setSpanCount(3);
+            } else {
+                gridLayoutManager.setSpanCount(4);
+            }
+        }
 
         return view;
     }
@@ -80,7 +101,25 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View, 
         if (hasError) {
             String errorText;
             String errorDescriptionText;
-            // TODO: Show Error text
+
+            switch (errorType) {
+                case NETWORK:
+                    errorText = getString(R.string.error_no_internet);
+                    errorDescriptionText = getString(R.string.error_no_internet_description);
+                    break;
+                case OTHER:
+                    errorText = getString(R.string.error_other);
+                    errorDescriptionText = getString(R.string.error_other_description);
+                    break;
+                case EMPTY:
+                default:
+                    errorText = getString(R.string.empty_recipes_list);
+                    errorDescriptionText = getString(R.string.empty_recipes_list_description);
+                    break;
+            }
+
+            tvError.setText(errorText);
+            tvErrorDescription.setText(errorDescriptionText);
 
             errorView.setVisibility(View.VISIBLE);
         } else {

@@ -5,4 +5,8 @@
     <string name="recipes_layout_manager" translatable="false">android.support.v7.widget.LinearLayoutManager</string>
     <string name="empty_recipes_list">Recipes are missing!</string>
     <string name="empty_recipes_list_description">We need to ask our chiefs to share their secrets.</string>
+    <string name="error_no_internet">No internet connection :(</string>
+    <string name="error_no_internet_description">No internet connection found. Check your connection and pull down to try again.</string>
+    <string name="error_other">Something went wrong!</string>
+    <string name="error_other_description">Please excuse us, our server got sick. We\'ll get it back soon.</string>
 </resources>

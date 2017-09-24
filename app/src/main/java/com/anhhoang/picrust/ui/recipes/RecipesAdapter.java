@@ -48,14 +48,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         holder.tvRecipeName.setText(recipeModel.recipe.getName());
 
         if (!TextUtils.isEmpty(recipeModel.recipe.getImage())) {
-            holder.ivRecipeThumbnail.setVisibility(View.VISIBLE);
-
             Picasso.with(holder.itemView.getContext())
                     .load(recipeModel.recipe.getImage())
                     .centerInside()
+                    .error(R.drawable.ic_image_black_24dp)
                     .into(holder.ivRecipeThumbnail);
-        } else {
-            holder.ivRecipeThumbnail.setVisibility(View.GONE);
         }
     }
 
