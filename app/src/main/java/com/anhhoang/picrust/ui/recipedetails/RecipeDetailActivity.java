@@ -36,11 +36,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
         int recipeId = intent.getIntExtra(EXTRA_RECIPE_ID, 0);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        RecipeDetailFragment fragment = (RecipeDetailFragment) fragmentManager.findFragmentById(R.id.recipe_detail_fragment);
+        RecipeDetailFragment recipeDetailFragment = (RecipeDetailFragment) fragmentManager.findFragmentById(R.id.recipe_detail_fragment);
 
         new RecipeDetailPresenter(
-                fragment,
+                recipeDetailFragment,
                 Injection.provideRecipesRepository(getApplicationContext()),
                 recipeId);
+
+        // TODO: TwoPane handle
     }
 }

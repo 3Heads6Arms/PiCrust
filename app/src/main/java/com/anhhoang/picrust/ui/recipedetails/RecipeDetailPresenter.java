@@ -1,10 +1,12 @@
 package com.anhhoang.picrust.ui.recipedetails;
 
-import com.anhhoang.picrust.data.Recipe;
+import com.anhhoang.picrust.data.Ingredient;
 import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.data.source.BaseDataSource;
 import com.anhhoang.picrust.ui.recipedetails.RecipeDetailContracts.Presenter;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,12 +48,12 @@ public class RecipeDetailPresenter implements Presenter {
     }
 
     @Override
-    public void openIngredients(Recipe recipe) {
+    public void openIngredients(List<Ingredient> ingredients) {
         // TODO: Show ingredient activity
     }
 
     @Override
-    public void openStep(Step step) {
+    public void openStep(int stepId, List<Step> steps) {
         // TODO: Show step activity
     }
 }

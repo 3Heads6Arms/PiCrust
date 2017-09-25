@@ -5,6 +5,8 @@ import android.arch.persistence.room.ForeignKey;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.anhhoang.picrust.data.models.RecipeItem;
+
 /**
  * Created by anh.hoang on 9/22/17.
  */
@@ -19,7 +21,7 @@ import android.support.annotation.Nullable;
                 onDelete = ForeignKey.CASCADE
         )
 )
-public class Step {
+public class Step implements RecipeItem {
     private final int id;
     private final String shortDescription;
     private final String description;

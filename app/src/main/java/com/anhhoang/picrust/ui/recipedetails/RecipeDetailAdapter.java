@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.anhhoang.picrust.R;
+import com.anhhoang.picrust.data.Ingredient;
 import com.anhhoang.picrust.data.Step;
+import com.anhhoang.picrust.data.models.RecipeItem;
+import com.anhhoang.picrust.data.models.RecipeModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +25,12 @@ import butterknife.ButterKnife;
 public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapter.ViewHolder> {
 
     private final OnItemClickListener onItemClickListener;
-    private int recipeId;
-    private List<Object> steps;
+    private final RecipeModel recipeModel;
+    private List<RecipeItem> steps;
 
-    public RecipeDetailAdapter(int recipeId, List<Step> steps, OnItemClickListener onItemClickListener) {
-        this.recipeId = recipeId;
-        setupSteps(steps);
+    public RecipeDetailAdapter(RecipeModel recipeModel, OnItemClickListener onItemClickListener) {
+        this.recipeModel = recipeModel;
+        setupSteps(recipeModel);
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -56,23 +59,23 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
         return this.steps == null ? 0 : this.steps.size();
     }
 
-    public void setSteps(List<Step> steps) {
-        setupSteps(steps);
+    public void setRecipeModel(RecipeModel recipeModel) {
+        setupSteps(recipeModel);
         notifyDataSetChanged();
     }
 
-    private void setupSteps(List<Step> steps) {
-        if (steps != null) {
-            this.steps = new ArrayList<Object>(steps);
-            // Add new 0bject to the present it as Ingredients item
-            this.steps.add(0, new Object());
+    private void setupSteps(RecipeModel recipeModel) {
+        if (recipeModel != null) {
+            this.steps = new ArrayList<RecipeItem>(recipeModel.steps);
+            // Add new placeholder Ingredient to the present it as item
+            this.steps.add(0, new Ingredient(0, null, null, 0));
         } else {
             this.steps = null;
         }
     }
 
     interface OnItemClickListener {
-        void onClick(int recipeId, int stepId, Class tClass);
+        void onClick(int stepId, List<RecipeItem> items, Class tClass);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -89,9 +92,9 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
                 public void onClick(View view) {
                     if (itemView.getTag() instanceof Step) {
                         Step step = (Step) itemView.getTag();
-                        onItemClickListener.onClick(recipeId, step.getId(), Step.class);
+                        onItemClickListener.onClick(step.getId(), new ArrayList<RecipeItem>(recipeModel.steps), Step.class);
                     } else {
-                        onItemClickListener.onClick(recipeId, 0, Object.class);
+                        onItemClickListener.onClick(0, new ArrayList<RecipeItem>(recipeModel.ingredients), Ingredient.class);
                     }
                 }
             });

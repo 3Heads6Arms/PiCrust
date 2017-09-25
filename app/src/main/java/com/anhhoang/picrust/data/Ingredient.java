@@ -5,6 +5,8 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.anhhoang.picrust.data.models.RecipeItem;
+
 /**
  * Created by anh.hoang on 9/22/17.
  */
@@ -18,7 +20,7 @@ import android.arch.persistence.room.PrimaryKey;
                 onDelete = ForeignKey.CASCADE
         )
 )
-public class Ingredient {
+public class Ingredient implements RecipeItem {
     @PrimaryKey(autoGenerate = true)
     private final int id;
     private final double quantity;

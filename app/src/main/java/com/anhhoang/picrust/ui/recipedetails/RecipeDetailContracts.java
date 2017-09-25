@@ -2,9 +2,11 @@ package com.anhhoang.picrust.ui.recipedetails;
 
 import com.anhhoang.picrust.BasePresenter;
 import com.anhhoang.picrust.BaseView;
-import com.anhhoang.picrust.data.Recipe;
+import com.anhhoang.picrust.data.Ingredient;
 import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeModel;
+
+import java.util.List;
 
 /**
  * Created by anh.hoang on 9/24/17.
@@ -24,8 +26,8 @@ public class RecipeDetailContracts {
     interface Presenter extends BasePresenter {
         void loadRecipe(int recipeId);
 
-        void openIngredients(Recipe recipe);
+        void openIngredients(List<Ingredient> ingredients);
 
-        void openStep(Step step);
+        void openStep(int stepId, List<Step> steps);
     }
 }
