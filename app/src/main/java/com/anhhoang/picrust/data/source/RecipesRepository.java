@@ -65,6 +65,11 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
 
     @Override
     public void get(int id, ResultCallback<RecipeModel> callback) {
+        if (cachedRecipes != null && cachedRecipes.containsKey(id)) {
+            callback.onLoaded(cachedRecipes.get(id));
+            return;
+        }
+
         this.recipesLocalDataSource.get(id, callback);
     }
 
