@@ -82,7 +82,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
             progressBar.setVisibility(View.VISIBLE);
             rvRecipeDetail.setVisibility(View.INVISIBLE);
         } else {
-            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
             rvRecipeDetail.setVisibility(View.VISIBLE);
         }
     }
@@ -93,7 +93,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
             errorView.setVisibility(View.VISIBLE);
             rvRecipeDetail.setVisibility(View.INVISIBLE);
         } else {
-            errorView.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.INVISIBLE);
             rvRecipeDetail.setVisibility(View.VISIBLE);
         }
     }
