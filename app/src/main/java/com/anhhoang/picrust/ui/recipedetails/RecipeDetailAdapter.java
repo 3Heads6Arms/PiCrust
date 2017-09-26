@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapter.ViewHolder> {
 
     private final OnItemClickListener onItemClickListener;
-    private final RecipeModel recipeModel;
+    private RecipeModel recipeModel;
     private List<RecipeItem> steps;
 
     public RecipeDetailAdapter(RecipeModel recipeModel, OnItemClickListener onItemClickListener) {
@@ -45,6 +45,8 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.itemView.setTag(steps.get(position));
+
         if (steps.get(position) instanceof Step) {
             Step step = (Step) steps.get(position);
             holder.tvItemName.setText(step.getShortDescription());
@@ -65,6 +67,7 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
     }
 
     private void setupSteps(RecipeModel recipeModel) {
+        this.recipeModel = recipeModel;
         if (recipeModel != null) {
             this.steps = new ArrayList<RecipeItem>(recipeModel.steps);
             // Add new placeholder Ingredient to the present it as item

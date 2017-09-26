@@ -43,6 +43,12 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        presenter.start();
+    }
+
+    @Override
     public void setPresenter(RecipeDetailContracts.Presenter presenter) {
         this.presenter = presenter;
     }
@@ -59,7 +65,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
 
     @Override
     public void showDetail(RecipeModel recipeModel) {
-        // TODO: load to menu
+        recipeDetailAdapter.setRecipeModel(recipeModel);
     }
 
     @Override
