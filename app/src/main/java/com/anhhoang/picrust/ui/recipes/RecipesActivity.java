@@ -48,13 +48,9 @@ public class RecipesActivity extends AppCompatActivity implements RecipesContrac
         // Inject Presenter into Activity
         new RecipesPresenter(this, Injection.provideRecipesRepository(getApplicationContext()));
 
-
         Configuration configuration = getResources().getConfiguration();
 
-        if (recipesAdapter == null) { // fragment instance is retained, may not required to create new adapter
-            recipesAdapter = new RecipesAdapter(null, R.layout.recipe_item_view, this);
-        }
-
+        recipesAdapter = new RecipesAdapter(null, R.layout.recipe_item_view, this);
         rvRecipes.setAdapter(recipesAdapter);
         rvRecipes.setHasFixedSize(true);
         // Set displaying option
