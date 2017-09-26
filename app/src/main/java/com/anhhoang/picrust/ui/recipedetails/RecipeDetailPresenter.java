@@ -58,7 +58,6 @@ public class RecipeDetailPresenter implements Presenter {
 
     @Override
     public void openStepDetail(int stepId, List<RecipeItem> recipeItems, Class tClass) {
-        // TODO: Show step activity
         if (Step.class == tClass) {
             view.showStep(stepId, transformList(recipeItems, Step.class));
         } else if (Ingredient.class == tClass) {
