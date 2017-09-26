@@ -54,8 +54,8 @@ class RecipesPresenter implements RecipesContracts.Presenter {
                     recipeErrorEnum = RecipeErrorEnum.NETWORK; // needs more testing to verify
                 }
 
-                view.showErrorView(true, recipeErrorEnum);
                 view.showLoadingIndicator(false);
+                view.showErrorView(true, recipeErrorEnum);
             }
         });
     }

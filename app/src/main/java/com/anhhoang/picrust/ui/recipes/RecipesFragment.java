@@ -90,8 +90,10 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View, 
     public void showLoadingIndicator(boolean isLoading) {
         if (isLoading) {
             progressBar.setVisibility(View.VISIBLE);
+            rvRecipes.setVisibility(View.INVISIBLE);
         } else {
             progressBar.setVisibility(View.GONE);
+            rvRecipes.setVisibility(View.VISIBLE);
         }
     }
 
@@ -126,8 +128,10 @@ public class RecipesFragment extends Fragment implements RecipesContracts.View, 
             tvErrorDescription.setText(errorDescriptionText);
 
             errorView.setVisibility(View.VISIBLE);
+            rvRecipes.setVisibility(View.INVISIBLE);
         } else {
             errorView.setVisibility(View.GONE);
+            rvRecipes.setVisibility(View.VISIBLE);
         }
     }
 
