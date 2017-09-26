@@ -13,4 +13,5 @@
     <string name="ingredients">Ingredients</string>
     <string name="no_steps_found">No steps found :(</string>
     <string name="no_recipe_found_description">Recipe\'s chief is working on it!</string>
+    <string name="title_activity_ingredients">IngredientsActivity</string>
 </resources>

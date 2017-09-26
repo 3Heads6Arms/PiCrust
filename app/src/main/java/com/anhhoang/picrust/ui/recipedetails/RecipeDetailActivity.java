@@ -15,6 +15,7 @@ import com.anhhoang.picrust.data.Ingredient;
 import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeItem;
 import com.anhhoang.picrust.data.models.RecipeModel;
+import com.anhhoang.picrust.ui.ingredients.IngredientsActivity;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
         Intent intent = getIntent();
         if (!intent.hasExtra(EXTRA_RECIPE_ID)) {
-            throw new IllegalArgumentException("Activity started without required intent EXTRA_RECIPE_ID");
+            throw new IllegalArgumentException("Activity started without required intent extra EXTRA_RECIPE_ID");
         }
 
         int recipeId = intent.getIntExtra(EXTRA_RECIPE_ID, 0);
@@ -84,7 +85,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
     @Override
     public void showIngredients(List<Ingredient> ingredients) {
-        // TODO:
+        // TODO: TwoPane handle
+        startActivity(IngredientsActivity.getStartingIntent(this, ingredients));
     }
 
     @Override

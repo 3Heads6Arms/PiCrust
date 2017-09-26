@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.anhhoang.picrust.data.models.RecipeItem;
 
@@ -20,7 +22,18 @@ import com.anhhoang.picrust.data.models.RecipeItem;
                 onDelete = ForeignKey.CASCADE
         )
 )
-public class Ingredient implements RecipeItem {
+public class Ingredient implements RecipeItem, Parcelable {
+    public static final Parcelable.Creator<Ingredient> CREATOR = new Parcelable.Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel source) {
+            return new Ingredient(source);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
     @PrimaryKey(autoGenerate = true)
     private final int id;
     private final double quantity;
@@ -46,6 +59,15 @@ public class Ingredient implements RecipeItem {
         this.recipeId = recipeId;
     }
 
+    @Ignore
+    protected Ingredient(Parcel in) {
+        this.id = in.readInt();
+        this.quantity = in.readDouble();
+        this.measure = in.readString();
+        this.ingredient = in.readString();
+        this.recipeId = in.readInt();
+    }
+
     public int getId() {
         return id;
     }
@@ -68,5 +90,19 @@ public class Ingredient implements RecipeItem {
 
     public void setRecipeId(int recipeId) {
         this.recipeId = recipeId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeDouble(this.quantity);
+        dest.writeString(this.measure);
+        dest.writeString(this.ingredient);
+        dest.writeInt(this.recipeId);
     }
 }
