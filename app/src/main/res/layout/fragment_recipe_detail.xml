@@ -25,6 +25,7 @@
         android:id="@+id/error_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:gravity="center"
@@ -32,17 +33,15 @@
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/error_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/empty_recipes_list"
+            android:text="@string/no_steps_found"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <TextView
-            android:id="@+id/error_description_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/empty_recipes_list_description"
+            android:text="@string/no_recipe_found_description"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
     </LinearLayout>
 

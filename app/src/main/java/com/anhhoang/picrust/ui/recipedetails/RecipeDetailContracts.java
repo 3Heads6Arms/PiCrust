@@ -4,6 +4,7 @@ import com.anhhoang.picrust.BasePresenter;
 import com.anhhoang.picrust.BaseView;
 import com.anhhoang.picrust.data.Ingredient;
 import com.anhhoang.picrust.data.Step;
+import com.anhhoang.picrust.data.models.RecipeItem;
 import com.anhhoang.picrust.data.models.RecipeModel;
 
 import java.util.List;
@@ -14,20 +15,20 @@ import java.util.List;
 
 public class RecipeDetailContracts {
     interface View extends BaseView<Presenter> {
-        void showIngredients(int recipeId);
+        void showIngredients(List<Ingredient> ingredients);
 
-        void showStep(int stepId, int recipeId);
+        void showStep(int stepId, List<Step> steps);
 
         void showDetail(RecipeModel recipeModel);
 
         void showLoadingIndicator(boolean isLoading);
+
+        void showError(boolean hasError);
     }
 
     interface Presenter extends BasePresenter {
         void loadRecipe(int recipeId);
 
-        void openIngredients(List<Ingredient> ingredients);
-
-        void openStep(int stepId, List<Step> steps);
+        void openStepDetail(int stepId, List<RecipeItem> recipeItems, Class tClass);
     }
 }

@@ -68,7 +68,7 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
 
     private void setupSteps(RecipeModel recipeModel) {
         this.recipeModel = recipeModel;
-        if (recipeModel != null) {
+        if (recipeModel != null && recipeModel.steps != null && recipeModel.steps.size() > 0) {
             this.steps = new ArrayList<RecipeItem>(recipeModel.steps);
             // Add new placeholder Ingredient to the present it as item
             this.steps.add(0, new Ingredient(0, null, null, 0));

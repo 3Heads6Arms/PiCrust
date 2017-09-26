@@ -6,8 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.anhhoang.picrust.R;
+import com.anhhoang.picrust.data.Ingredient;
+import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeItem;
 import com.anhhoang.picrust.data.models.RecipeModel;
 
@@ -23,6 +26,11 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
 
     @BindView(R.id.recipe_detail_recycler_view)
     RecyclerView rvRecipeDetail;
+    @BindView(R.id.error_view)
+    View errorView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
     private RecipeDetailContracts.Presenter presenter;
     private RecipeDetailAdapter recipeDetailAdapter;
 
@@ -54,12 +62,12 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
     }
 
     @Override
-    public void showIngredients(int recipeId) {
+    public void showIngredients(List<Ingredient> ingredients) {
         // TODO:
     }
 
     @Override
-    public void showStep(int stepId, int recipeId) {
+    public void showStep(int stepId, List<Step> steps) {
         // TODO:
     }
 
@@ -70,11 +78,28 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailContra
 
     @Override
     public void showLoadingIndicator(boolean isLoading) {
-        // TODO:
+        if (isLoading) {
+            progressBar.setVisibility(View.VISIBLE);
+            rvRecipeDetail.setVisibility(View.INVISIBLE);
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+            rvRecipeDetail.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showError(boolean hasError) {
+        if (hasError) {
+            errorView.setVisibility(View.VISIBLE);
+            rvRecipeDetail.setVisibility(View.INVISIBLE);
+        } else {
+            errorView.setVisibility(View.VISIBLE);
+            rvRecipeDetail.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onClick(int stepId, List<RecipeItem> items, Class tClass) {
-        // TODO:
+        presenter.openStepDetail(stepId, items, tClass);
     }
 }

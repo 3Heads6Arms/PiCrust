@@ -11,4 +11,6 @@
     <string name="error_other_description">Please excuse us, our server got sick. We\'ll get it back soon.</string>
     <string name="title_activity_recipe_detail">RecipeDetailActivity</string>
     <string name="ingredients">Ingredients</string>
+    <string name="no_steps_found">No steps found :(</string>
+    <string name="no_recipe_found_description">Recipe\'s chief is working on it!</string>
 </resources>
