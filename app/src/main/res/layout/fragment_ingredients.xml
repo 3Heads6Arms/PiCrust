@@ -29,13 +29,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_steps_found"
+            android:text="@string/ingredients_empty"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_recipe_found_description"
+            android:text="@string/ingredients_empty_description"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
     </LinearLayout>
 </FrameLayout>
