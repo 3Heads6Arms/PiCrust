@@ -3,9 +3,10 @@ package com.anhhoang.picrust.ui.ingredients;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.data.Ingredient;
@@ -38,6 +39,18 @@ public class IngredientsActivity extends AppCompatActivity {
         }
         List<Ingredient> ingredients = intent.getParcelableArrayListExtra(EXTRA_INGREDIENTS);
 
-        Log.d(IngredientsActivity.class.getSimpleName(), ingredients.size() + "");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        IngredientsFragment ingredientsFragment = (IngredientsFragment) fragmentManager.findFragmentById(R.id.ingredients_fragment);
+
+        new IngredientsPresenter(ingredientsFragment, ingredients);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

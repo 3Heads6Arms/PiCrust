@@ -11,15 +11,9 @@
         android:id="@+id/ingredients_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:listitem="@layout/step_item_view" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/error_view"

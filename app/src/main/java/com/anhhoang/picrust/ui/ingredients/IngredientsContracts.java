@@ -14,8 +14,6 @@ public class IngredientsContracts {
     interface View extends BaseView<Presenter> {
         void showIngredients(List<Ingredient> ingredients);
 
-        void showLoadingIndicator(boolean isLoading);
-
         void showError(boolean hasError);
     }
 
