@@ -13,7 +13,7 @@ import java.util.List;
  * Created by anh.hoang on 9/24/17.
  */
 
-public class RecipeDetailContracts {
+public interface RecipeDetailContracts {
     interface View extends BaseView<Presenter> {
         void showIngredients(List<Ingredient> ingredients);
 

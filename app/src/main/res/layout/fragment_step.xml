@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.anhhoang.picrust.ui.step.StepActivityFragment"
+    tools:context="com.anhhoang.picrust.ui.step.StepFragment"
     tools:showIn="@layout/activity_step">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/step_description_text_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="@dimen/activity_horizontal_margin"
