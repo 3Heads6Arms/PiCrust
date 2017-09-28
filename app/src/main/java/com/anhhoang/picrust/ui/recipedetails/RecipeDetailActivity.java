@@ -103,7 +103,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     @Override
     public void showStep(int stepId, List<Step> steps) {
         // TODO: TwoPane handle
-        startActivity(StepActivity.getStartingIntent(this, steps));
+        startActivity(StepActivity.getStartingIntent(this, stepId, steps));
     }
 
     @Override
