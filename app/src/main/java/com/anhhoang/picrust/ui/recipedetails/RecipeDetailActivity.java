@@ -17,6 +17,7 @@ import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeItem;
 import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.ui.ingredients.IngredientsActivity;
+import com.anhhoang.picrust.ui.step.StepActivity;
 
 import java.util.List;
 
@@ -101,7 +102,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
     @Override
     public void showStep(int stepId, List<Step> steps) {
-        // TODO:
+        // TODO: TwoPane handle
+        startActivity(StepActivity.getStartingIntent(this, steps));
     }
 
     @Override

@@ -10,7 +10,7 @@
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/step_video_player"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/player_height"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
