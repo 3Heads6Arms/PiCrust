@@ -39,6 +39,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.anhhoang.picrust.ui.recipedetails.RecipeDetailActivity" />
         </activity>
+        <activity
+            android:name=".ui.step.StepActivity"
+            android:label="@string/title_activity_step"
+            android:parentActivityName=".ui.recipedetails.RecipeDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.anhhoang.picrust.ui.recipedetails.RecipeDetailActivity" />
+        </activity>
     </application>
 
 </manifest>
