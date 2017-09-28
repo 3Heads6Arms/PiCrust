@@ -17,4 +17,6 @@
     <string name="ingredients_empty">Ingredients has gone missing :\'(</string>
     <string name="ingredients_empty_description">We\'re trying to catch the thief! Hang on!</string>
     <string name="title_activity_step">StepActivity</string>
+    <string name="next_step">Next Step</string>
+    <string name="previous_step">Previous Step</string>
 </resources>
