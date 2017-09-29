@@ -3,6 +3,7 @@ package com.anhhoang.picrust.ui.step;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class StepActivity extends AppCompatActivity {
     public static final String EXTRA_STEPS = "ExtraSteps";
     private static final String EXTRA_STEP_ID = "ExtraStepId";
+    private StepPresenter stepPresenter;
 
     public static Intent getStartingIntent(Context context, int stepId, List<Step> steps) {
         Intent intent = new Intent(context, StepActivity.class);
@@ -39,5 +41,9 @@ public class StepActivity extends AppCompatActivity {
 
         List<Step> steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
         int stepId = intent.getIntExtra(EXTRA_STEP_ID, 0);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        StepFragment stepFragment = (StepFragment) fragmentManager.findFragmentById(R.id.step_fragment);
+        stepPresenter = new StepPresenter(stepFragment, stepId, steps);
     }
 }

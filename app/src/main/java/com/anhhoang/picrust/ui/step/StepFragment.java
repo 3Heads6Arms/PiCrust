@@ -1,7 +1,11 @@
 package com.anhhoang.picrust.ui.step;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +14,25 @@ import android.widget.TextView;
 
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.data.Step;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +52,21 @@ public class StepFragment extends Fragment implements StepContracts.View {
     Button btnNext;
 
     private StepContracts.Presenter presenter;
+    private SimpleExoPlayer stepExoPlayer;
+    private Target thumbnailTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            stepPlayerView.setDefaultArtwork(bitmap);
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
 
     public StepFragment() {
     }
@@ -46,8 +83,15 @@ public class StepFragment extends Fragment implements StepContracts.View {
     @Override
     public void onResume() {
         super.onResume();
-
         presenter.start();
+    }
+
+    @Override
+    public void onDestroy() {
+        Picasso.with(getContext())
+                .cancelRequest(thumbnailTarget);
+        releasePlayer();
+        super.onDestroy();
     }
 
     @Override
@@ -58,6 +102,20 @@ public class StepFragment extends Fragment implements StepContracts.View {
     @Override
     public void showStep(Step step) {
         tvStepDescription.setText(step.getDescription());
+
+        if (!TextUtils.isEmpty(step.getThumbnailURL())) {
+            Picasso.with(getContext())
+                    .load(step.getThumbnailURL())
+                    .centerInside()
+                    .into(thumbnailTarget);
+        }
+
+        if (TextUtils.isEmpty(step.getVideoURL())) {
+            stepPlayerView.setVisibility(View.GONE);
+        } else {
+            stepPlayerView.setVisibility(View.VISIBLE);
+            setupPlayer(Uri.parse(step.getVideoURL()));
+        }
     }
 
     @Override
@@ -72,7 +130,7 @@ public class StepFragment extends Fragment implements StepContracts.View {
 
     @Override
     public void showSelectedStep() {
-
+        // TODO:
     }
 
     @OnClick(R.id.previous_button)
@@ -83,5 +141,62 @@ public class StepFragment extends Fragment implements StepContracts.View {
     @OnClick(R.id.next_button)
     public void onNextClicked() {
         presenter.openNextStep();
+    }
+
+    private void setupPlayer(Uri mediaUri) {
+        TrackSelector trackSelector = new DefaultTrackSelector();
+        LoadControl loadControl = new DefaultLoadControl();
+
+        stepExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+
+        stepExoPlayer.addListener(new ExoPlayer.EventListener() {
+            @Override
+            public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+            }
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+
+            }
+
+            @Override
+            public void onPositionDiscontinuity() {
+
+            }
+        });
+
+        MediaSource mediaSource = new ExtractorMediaSource(
+                mediaUri,
+                new DefaultDataSourceFactory(getContext(), Util.getUserAgent(getContext(), "PiCrust")),
+                new DefaultExtractorsFactory(),
+                null,
+                null);
+
+        stepExoPlayer.prepare(mediaSource);
+        stepExoPlayer.setPlayWhenReady(false);
+
+        stepPlayerView.setPlayer(stepExoPlayer);
+    }
+
+    private void releasePlayer() {
+        stepExoPlayer.stop();
+        stepExoPlayer.release();
+        stepExoPlayer = null;
     }
 }

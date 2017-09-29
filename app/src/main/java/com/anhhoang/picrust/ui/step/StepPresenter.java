@@ -32,8 +32,8 @@ public class StepPresenter implements Presenter {
 
             if (step.getId() == currentStepId) {
                 view.showStep(step);
-                view.showNextButton(i == steps.size() - 1);
-                view.showPrevButton(i == 0);
+                view.showNextButton(i != steps.size() - 1);
+                view.showPrevButton(i != 0);
                 return;
             }
         }
@@ -41,14 +41,13 @@ public class StepPresenter implements Presenter {
 
     @Override
     public void openPreviousStep() {
-        // TODO:
+        // TODO: Change current step
         view.showSelectedStep();
     }
 
     @Override
     public void openNextStep() {
-        // TODO:
-
+        // TODO: Change current step
         view.showSelectedStep();
     }
 

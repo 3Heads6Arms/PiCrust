@@ -21,10 +21,11 @@
         android:layout_height="0dp"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:gravity="left|top"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintBottom_toTopOf="@+id/previous_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/step_video_player"
+        app:layout_constraintTop_toBottomOf="@id/step_video_player"
         tools:text="Sep Description" />
 
     <Button
