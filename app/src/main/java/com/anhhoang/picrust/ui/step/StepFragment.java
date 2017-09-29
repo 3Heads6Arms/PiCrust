@@ -67,8 +67,12 @@ public class StepFragment extends Fragment implements StepContracts.View {
         public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
     };
+    private boolean wasPlaying;
+    private boolean shouldPlayPlayback;
+    private long playbackPosition;
 
     public StepFragment() {
+        setRetainInstance(true);
     }
 
     @Override
@@ -86,12 +90,20 @@ public class StepFragment extends Fragment implements StepContracts.View {
         presenter.start();
     }
 
+
     @Override
     public void onDestroy() {
         Picasso.with(getContext())
                 .cancelRequest(thumbnailTarget);
         releasePlayer();
         super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        releasePlayer();
+        shouldPlayPlayback = true;
     }
 
     @Override
@@ -114,7 +126,11 @@ public class StepFragment extends Fragment implements StepContracts.View {
             stepPlayerView.setVisibility(View.GONE);
         } else {
             stepPlayerView.setVisibility(View.VISIBLE);
-            setupPlayer(Uri.parse(step.getVideoURL()));
+            if (stepExoPlayer == null) {
+                setupPlayer(Uri.parse(step.getVideoURL()));
+            } else {
+                stepPlayerView.setPlayer(stepExoPlayer);
+            }
         }
     }
 
@@ -147,7 +163,9 @@ public class StepFragment extends Fragment implements StepContracts.View {
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
 
-        stepExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+        if (stepExoPlayer == null) {
+            stepExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+        }
 
         stepExoPlayer.addListener(new ExoPlayer.EventListener() {
             @Override
@@ -168,6 +186,20 @@ public class StepFragment extends Fragment implements StepContracts.View {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
+                // TODO: Update logic for orientation changing
+                if (playbackState == ExoPlayer.STATE_READY) {
+                    if (shouldPlayPlayback && wasPlaying) {
+                        shouldPlayPlayback = true;
+                        stepExoPlayer.setPlayWhenReady(true);
+                    }
+                    if (playWhenReady) {
+                        wasPlaying = true;
+                    }
+                } else {
+                    wasPlaying = false;
+                }
+
+                playbackPosition = stepExoPlayer.getCurrentPosition();
             }
 
             @Override
@@ -192,6 +224,8 @@ public class StepFragment extends Fragment implements StepContracts.View {
         stepExoPlayer.setPlayWhenReady(false);
 
         stepPlayerView.setPlayer(stepExoPlayer);
+
+        stepExoPlayer.seekTo(playbackPosition);
     }
 
     private void releasePlayer() {
