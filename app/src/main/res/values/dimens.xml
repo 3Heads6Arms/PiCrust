@@ -9,4 +9,6 @@
     <dimen name="recycler_view_margin_top">0dp</dimen>
     <dimen name="item_padding_bottom">24dp</dimen>
     <dimen name="player_height">250dp</dimen>
+    <dimen name="seek_bar_height">32dp</dimen>
+    <dimen name="controls_padding">4dp</dimen>
 </resources>

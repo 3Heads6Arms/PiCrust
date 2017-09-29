@@ -15,18 +15,13 @@ import android.widget.TextView;
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.data.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -67,9 +62,6 @@ public class StepFragment extends Fragment implements StepContracts.View {
         public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
     };
-    private boolean wasPlaying;
-    private boolean shouldPlayPlayback;
-    private long playbackPosition;
 
     public StepFragment() {
         setRetainInstance(true);
@@ -95,15 +87,15 @@ public class StepFragment extends Fragment implements StepContracts.View {
     public void onDestroy() {
         Picasso.with(getContext())
                 .cancelRequest(thumbnailTarget);
-        releasePlayer();
         super.onDestroy();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        releasePlayer();
-        shouldPlayPlayback = true;
+        if (!getActivity().isChangingConfigurations()) {
+            releasePlayer();
+        }
     }
 
     @Override
@@ -167,52 +159,6 @@ public class StepFragment extends Fragment implements StepContracts.View {
             stepExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
         }
 
-        stepExoPlayer.addListener(new ExoPlayer.EventListener() {
-            @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-            }
-
-            @Override
-            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-            }
-
-            @Override
-            public void onLoadingChanged(boolean isLoading) {
-
-            }
-
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
-                // TODO: Update logic for orientation changing
-                if (playbackState == ExoPlayer.STATE_READY) {
-                    if (shouldPlayPlayback && wasPlaying) {
-                        shouldPlayPlayback = true;
-                        stepExoPlayer.setPlayWhenReady(true);
-                    }
-                    if (playWhenReady) {
-                        wasPlaying = true;
-                    }
-                } else {
-                    wasPlaying = false;
-                }
-
-                playbackPosition = stepExoPlayer.getCurrentPosition();
-            }
-
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-
-            }
-
-            @Override
-            public void onPositionDiscontinuity() {
-
-            }
-        });
-
         MediaSource mediaSource = new ExtractorMediaSource(
                 mediaUri,
                 new DefaultDataSourceFactory(getContext(), Util.getUserAgent(getContext(), "PiCrust")),
@@ -224,8 +170,6 @@ public class StepFragment extends Fragment implements StepContracts.View {
         stepExoPlayer.setPlayWhenReady(false);
 
         stepPlayerView.setPlayer(stepExoPlayer);
-
-        stepExoPlayer.seekTo(playbackPosition);
     }
 
     private void releasePlayer() {
