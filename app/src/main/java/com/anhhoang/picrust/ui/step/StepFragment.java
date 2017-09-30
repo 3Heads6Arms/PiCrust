@@ -1,10 +1,14 @@
 package com.anhhoang.picrust.ui.step;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +33,11 @@ import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import butterknife.BindBool;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Optional;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -39,12 +45,18 @@ import butterknife.OnClick;
 public class StepFragment extends Fragment implements StepContracts.View {
     @BindView(R.id.step_video_player)
     SimpleExoPlayerView stepPlayerView;
+    @Nullable
     @BindView(R.id.step_description_text_view)
     TextView tvStepDescription;
+    @Nullable
     @BindView(R.id.previous_button)
     Button btnPrevious;
+    @Nullable
     @BindView(R.id.next_button)
     Button btnNext;
+
+    @BindBool(R.bool.is_two_pane)
+    boolean twoPane;
 
     private StepContracts.Presenter presenter;
     private SimpleExoPlayer stepExoPlayer;
@@ -77,6 +89,12 @@ public class StepFragment extends Fragment implements StepContracts.View {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setImmersiveModeIfValid();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         presenter.start();
@@ -105,7 +123,9 @@ public class StepFragment extends Fragment implements StepContracts.View {
 
     @Override
     public void showStep(Step step) {
-        tvStepDescription.setText(step.getDescription());
+        if (tvStepDescription != null) {
+            tvStepDescription.setText(step.getDescription());
+        }
 
         if (!TextUtils.isEmpty(step.getThumbnailURL())) {
             Picasso.with(getContext())
@@ -128,12 +148,16 @@ public class StepFragment extends Fragment implements StepContracts.View {
 
     @Override
     public void showPrevButton(boolean isVisible) {
-        btnPrevious.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        if (btnPrevious != null) {
+            btnPrevious.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     @Override
     public void showNextButton(boolean isVisible) {
-        btnNext.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        if (btnNext != null) {
+            btnNext.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     @Override
@@ -141,11 +165,13 @@ public class StepFragment extends Fragment implements StepContracts.View {
         // TODO:
     }
 
+    @Optional
     @OnClick(R.id.previous_button)
     public void onPreviousClicked() {
         presenter.openPreviousStep();
     }
 
+    @Optional
     @OnClick(R.id.next_button)
     public void onNextClicked() {
         presenter.openNextStep();
@@ -176,5 +202,28 @@ public class StepFragment extends Fragment implements StepContracts.View {
         stepExoPlayer.stop();
         stepExoPlayer.release();
         stepExoPlayer = null;
+    }
+
+    private void setImmersiveModeIfValid() {
+        int orientation = getResources().getConfiguration().orientation;
+
+        // Set immersive view for phone landscape
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && !twoPane) {
+            getActivity()
+                    .getWindow()
+                    .getDecorView()
+                    .setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE);
+
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.hide();
+            }
+        }
     }
 }
