@@ -37,7 +37,6 @@ import butterknife.BindBool;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Optional;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -45,16 +44,14 @@ import butterknife.Optional;
 public class StepFragment extends Fragment implements StepContracts.View {
     @BindView(R.id.step_video_player)
     SimpleExoPlayerView stepPlayerView;
-    @Nullable
     @BindView(R.id.step_description_text_view)
     TextView tvStepDescription;
-    @Nullable
     @BindView(R.id.previous_button)
     Button btnPrevious;
-    @Nullable
     @BindView(R.id.next_button)
     Button btnNext;
-
+    @BindView(R.id.detail_view)
+    View detailView;
     @BindBool(R.bool.is_two_pane)
     boolean twoPane;
 
@@ -74,6 +71,7 @@ public class StepFragment extends Fragment implements StepContracts.View {
         public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
     };
+    private View view;
 
     public StepFragment() {
         setRetainInstance(true);
@@ -82,8 +80,14 @@ public class StepFragment extends Fragment implements StepContracts.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_step, container, false);
-        ButterKnife.bind(this, view);
+        if (view == null) {
+            view = inflater.inflate(R.layout.fragment_step, container, false);
+            ButterKnife.bind(this, view);
+        } else {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            parent.removeView(view);
+        }
+
 
         return view;
     }
@@ -140,8 +144,6 @@ public class StepFragment extends Fragment implements StepContracts.View {
             stepPlayerView.setVisibility(View.VISIBLE);
             if (stepExoPlayer == null) {
                 setupPlayer(Uri.parse(step.getVideoURL()));
-            } else {
-                stepPlayerView.setPlayer(stepExoPlayer);
             }
         }
     }
@@ -165,13 +167,11 @@ public class StepFragment extends Fragment implements StepContracts.View {
         // TODO:
     }
 
-    @Optional
     @OnClick(R.id.previous_button)
     public void onPreviousClicked() {
         presenter.openPreviousStep();
     }
 
-    @Optional
     @OnClick(R.id.next_button)
     public void onNextClicked() {
         presenter.openNextStep();
@@ -209,6 +209,8 @@ public class StepFragment extends Fragment implements StepContracts.View {
 
         // Set immersive view for phone landscape
         if (orientation == Configuration.ORIENTATION_LANDSCAPE && !twoPane) {
+            detailView.setVisibility(View.GONE);
+            stepPlayerView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
             getActivity()
                     .getWindow()
                     .getDecorView()
@@ -224,6 +226,9 @@ public class StepFragment extends Fragment implements StepContracts.View {
             if (actionBar != null) {
                 actionBar.hide();
             }
+        } else if (!twoPane) {
+            detailView.setVisibility(View.VISIBLE);
+            stepPlayerView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.player_height);
         }
     }
 }
