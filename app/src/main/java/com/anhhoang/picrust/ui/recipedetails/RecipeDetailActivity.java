@@ -3,6 +3,9 @@ package com.anhhoang.picrust.ui.recipedetails;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,16 +20,25 @@ import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeItem;
 import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.ui.ingredients.IngredientsActivity;
+import com.anhhoang.picrust.ui.ingredients.IngredientsContracts;
+import com.anhhoang.picrust.ui.ingredients.IngredientsFragment;
+import com.anhhoang.picrust.ui.ingredients.IngredientsPresenter;
 import com.anhhoang.picrust.ui.step.StepActivity;
+import com.anhhoang.picrust.ui.step.StepContracts;
+import com.anhhoang.picrust.ui.step.StepFragment;
+import com.anhhoang.picrust.ui.step.StepPresenter;
 
 import java.util.List;
 
+import butterknife.BindBool;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecipeDetailActivity extends AppCompatActivity implements RecipeDetailContracts.View, RecipeDetailAdapter.OnItemClickListener {
     public static final String EXTRA_RECIPE_ID = "ExtraRecipeId";
-
+    private static final String TAG = "RecipeFragmentTag";
+    private static final String INGREDIENTS_PRESENTER_KEY = "IngredientsPresenterKey";
+    private static final String STEP_PRESENTER_KEY = "StepPresenterKey";
 
     @BindView(R.id.recipe_detail_recycler_view)
     RecyclerView rvRecipeDetail;
@@ -34,9 +46,14 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     View errorView;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindBool(R.bool.is_two_pane)
+    boolean twoPane;
 
     private RecipeDetailContracts.Presenter presenter;
+    private IngredientsContracts.Presenter ingredientsPresenter;
+    private StepContracts.Presenter stepPresenter;
     private RecipeDetailAdapter recipeDetailAdapter;
+    private boolean isFirstStart;
 
     public static Intent getStartingIntent(Context context, int recipeId) {
         Intent intent = new Intent(context, RecipeDetailActivity.class);
@@ -71,7 +88,31 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         recipeDetailAdapter = new RecipeDetailAdapter(null, this);
         rvRecipeDetail.setAdapter(recipeDetailAdapter);
         rvRecipeDetail.setHasFixedSize(true);
-        // TODO: TwoPane handle
+
+        if (twoPane) {
+            if (savedInstanceState == null) {
+                isFirstStart = true;
+            } else {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment fragment = fragmentManager.findFragmentByTag(TAG);
+                if (fragment instanceof StepFragment) {
+                    stepPresenter = savedInstanceState.getParcelable(STEP_PRESENTER_KEY);
+                    stepPresenter.switchView((StepContracts.View) fragment);
+                } else if (fragment instanceof IngredientsFragment) {
+                    ingredientsPresenter = savedInstanceState.getParcelable(INGREDIENTS_PRESENTER_KEY);
+                    ingredientsPresenter.switchView((IngredientsContracts.View) fragment);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(INGREDIENTS_PRESENTER_KEY, (Parcelable) ingredientsPresenter);
+        outState.putParcelable(STEP_PRESENTER_KEY, (Parcelable) stepPresenter);
+
     }
 
     @Override
@@ -96,19 +137,43 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
     @Override
     public void showIngredients(List<Ingredient> ingredients) {
-        // TODO: TwoPane handle
-        startActivity(IngredientsActivity.getStartingIntent(this, ingredients));
+        if (twoPane) {
+            IngredientsFragment ingredientsFragment = new IngredientsFragment();
+            if (ingredientsPresenter == null) {
+                ingredientsPresenter = new IngredientsPresenter(ingredientsFragment, ingredients);
+            } else {
+                ingredientsPresenter.switchView(ingredientsFragment);
+            }
+            changeFragment(ingredientsFragment);
+        } else {
+            startActivity(IngredientsActivity.getStartingIntent(this, ingredients));
+        }
     }
 
     @Override
     public void showStep(int stepId, List<Step> steps) {
-        // TODO: TwoPane handle
-        startActivity(StepActivity.getStartingIntent(this, stepId, steps));
+        if (twoPane) {
+            StepFragment stepFragment = new StepFragment();
+            if (stepPresenter == null) {
+                stepPresenter = new StepPresenter(stepFragment, stepId, steps);
+            } else {
+                stepPresenter.setStep(stepId);
+                stepPresenter.switchView(stepFragment);
+            }
+
+            changeFragment(stepFragment);
+        } else {
+            startActivity(StepActivity.getStartingIntent(this, stepId, steps));
+        }
     }
 
     @Override
     public void showDetail(RecipeModel recipeModel) {
         recipeDetailAdapter.setRecipeModel(recipeModel);
+
+        if (isFirstStart && twoPane) {
+            showIngredients(recipeModel.ingredients);
+        }
     }
 
     @Override
@@ -136,5 +201,13 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     @Override
     public void onClick(int stepId, List<RecipeItem> items, Class tClass) {
         presenter.openStepDetail(stepId, items, tClass);
+    }
+
+    private void changeFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.ingredients_step_fragment, fragment, TAG)
+                .commit();
     }
 }

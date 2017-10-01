@@ -27,5 +27,7 @@ public interface StepContracts {
         void openNextStep();
 
         void switchView(View view);
+
+        void setStep(int stepId);
     }
 }

@@ -43,7 +43,6 @@ import butterknife.Optional;
  * A placeholder fragment containing a simple view.
  */
 public class StepFragment extends Fragment implements StepContracts.View {
-    public static final String TAG = "StepFragmentTag";
 
     @BindView(R.id.step_video_player)
     SimpleExoPlayerView stepPlayerView;
@@ -55,6 +54,7 @@ public class StepFragment extends Fragment implements StepContracts.View {
     @Nullable
     @BindView(R.id.next_button)
     Button btnNext;
+    @Nullable
     @BindView(R.id.detail_view)
     View detailView;
     @BindBool(R.bool.is_two_pane)
@@ -102,9 +102,6 @@ public class StepFragment extends Fragment implements StepContracts.View {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (!(getActivity() instanceof OnStepNavigationListener)) {
-            throw new RuntimeException("Activity must implements OnStepNavigationListener");
-        }
 
         setImmersiveModeIfValid();
     }

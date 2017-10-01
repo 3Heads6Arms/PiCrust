@@ -92,15 +92,14 @@ public class StepPresenter implements Presenter, Parcelable {
 
     @Override
     public void switchView(StepContracts.View view) {
-        this.view = null;
         this.view = view;
 
         view.setPresenter(this);
     }
 
+    @Override
     public void setStep(int stepId) {
         currentStepId = stepId;
-        view.showSelectedStep();
     }
 
     @Override

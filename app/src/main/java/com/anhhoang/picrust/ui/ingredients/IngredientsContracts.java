@@ -19,5 +19,7 @@ public interface IngredientsContracts {
 
     interface Presenter extends BasePresenter {
         void loadIngredients();
+
+        void switchView(IngredientsContracts.View view);
     }
 }

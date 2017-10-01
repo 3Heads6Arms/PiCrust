@@ -3,4 +3,5 @@
     <dimen name="recycler_view_left_margin">16dp</dimen>
     <dimen name="recycler_view_right_margin">8dp</dimen>
     <dimen name="recycler_view_margin_top">16dp</dimen>
+    <dimen name="player_height">300dp</dimen>
 </resources>

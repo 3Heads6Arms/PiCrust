@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StepActivity extends AppCompatActivity implements StepFragment.OnStepNavigationListener {
+    private static final String TAG = "StepFragmentTag";
     private static final String EXTRA_STEPS = "ExtraSteps";
     private static final String EXTRA_STEP_ID = "ExtraStepId";
     private static final String PRESENTER_KEY = "PresenterKey";
-
     private StepPresenter stepPresenter;
 
     public static Intent getStartingIntent(Context context, int stepId, List<Step> steps) {
@@ -45,7 +45,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnSt
 
         StepFragment stepFragment;
         if (savedInstanceState != null) {
-            stepFragment = (StepFragment) fragmentManager.findFragmentByTag(StepFragment.TAG);
+            stepFragment = (StepFragment) fragmentManager.findFragmentByTag(TAG);
             stepPresenter = savedInstanceState.getParcelable(PRESENTER_KEY);
             stepPresenter.switchView(stepFragment);
         } else {
@@ -56,7 +56,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnSt
 
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.step_fragment, stepFragment, StepFragment.TAG)
+                    .replace(R.id.step_fragment, stepFragment, TAG)
                     .commit();
         }
     }
@@ -77,7 +77,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnSt
 
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.step_fragment, newStepFragment, StepFragment.TAG)
+                .replace(R.id.step_fragment, newStepFragment, TAG)
                 .commit();
     }
 }
