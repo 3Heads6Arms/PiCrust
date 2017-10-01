@@ -10,7 +10,7 @@ import java.util.List;
  * Created by anh.hoang on 9/23/17.
  */
 
-interface RecipesContracts {
+public interface RecipesContracts {
 
     interface View extends BaseView<Presenter> {
         void showLoadingIndicator(boolean isLoading);

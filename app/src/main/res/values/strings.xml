@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Pi Crust</string>
-    <string name="title_activity_recipes">RecipesActivity</string>
     <string name="action_settings">Settings</string>
     <string name="recipes_layout_manager" translatable="false">android.support.v7.widget.LinearLayoutManager</string>
     <string name="empty_recipes_list">Recipes are missing!</string>
@@ -9,14 +8,11 @@
     <string name="error_no_internet_description">No internet connection found. Check your connection and pull down to try again.</string>
     <string name="error_other">Something went wrong!</string>
     <string name="error_other_description">Please excuse us, our server got sick. We\'ll get it back soon.</string>
-    <string name="title_activity_recipe_detail">RecipeDetailActivity</string>
     <string name="ingredients">Ingredients</string>
     <string name="no_steps_found">No steps found :(</string>
     <string name="no_recipe_found_description">Recipe\'s chief is working on it!</string>
-    <string name="title_activity_ingredients">IngredientsActivity</string>
     <string name="ingredients_empty">Ingredients has gone missing :\'(</string>
     <string name="ingredients_empty_description">We\'re trying to catch the thief! Hang on!</string>
-    <string name="title_activity_step">StepActivity</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
 </resources>

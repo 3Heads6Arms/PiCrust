@@ -11,11 +11,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by anh.hoang on 9/23/17.
  */
 
-class RecipesPresenter implements RecipesContracts.Presenter {
+public class RecipesPresenter implements RecipesContracts.Presenter {
     private RecipesContracts.View view;
     private BaseDataSource<RecipeModel> repository;
 
-    RecipesPresenter(RecipesContracts.View view, BaseDataSource<RecipeModel> repository) {
+    public RecipesPresenter(RecipesContracts.View view, BaseDataSource<RecipeModel> repository) {
         this.view = checkNotNull(view);
         this.repository = checkNotNull(repository);
 

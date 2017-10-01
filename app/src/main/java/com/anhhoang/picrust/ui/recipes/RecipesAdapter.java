@@ -66,7 +66,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    interface OnClickListener {
+    public interface OnClickListener {
         void onClick(RecipeModel recipeModel);
     }
 
