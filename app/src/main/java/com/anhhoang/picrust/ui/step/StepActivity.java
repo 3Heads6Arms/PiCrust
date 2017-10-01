@@ -77,7 +77,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnSt
 
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.step_fragment, newStepFragment)
+                .replace(R.id.step_fragment, newStepFragment, StepFragment.TAG)
                 .commit();
     }
 }
