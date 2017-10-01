@@ -25,9 +25,13 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
@@ -151,7 +155,7 @@ public class StepFragment extends Fragment implements StepContracts.View {
         } else {
             stepPlayerView.setVisibility(View.VISIBLE);
             if (stepExoPlayer == null) {
-                setupPlayer(Uri.parse(step.getVideoURL()));
+                initializePlayer(Uri.parse(step.getVideoURL()));
             }
         }
     }
@@ -189,8 +193,10 @@ public class StepFragment extends Fragment implements StepContracts.View {
         presenter.openNextStep();
     }
 
-    private void setupPlayer(Uri mediaUri) {
-        TrackSelector trackSelector = new DefaultTrackSelector();
+    private void initializePlayer(Uri mediaUri) {
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelection.Factory trackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
         LoadControl loadControl = new DefaultLoadControl();
 
         stepExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);

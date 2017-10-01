@@ -16,10 +16,12 @@ import java.util.List;
 
 public class IngredientsActivity extends AppCompatActivity {
     private static final String EXTRA_INGREDIENTS = "ExtraIngredients";
+    private static final String EXTRA_RECIPE_NAME = "ExtraRecipeName";
 
-    public static Intent getStartingIntent(Context context, List<Ingredient> ingredients) {
+    public static Intent getStartingIntent(Context context, List<Ingredient> ingredients, String recipeName) {
         Intent intent = new Intent(context, IngredientsActivity.class);
         intent.putExtra(EXTRA_INGREDIENTS, new ArrayList<>(ingredients));
+        intent.putExtra(EXTRA_RECIPE_NAME, recipeName);
 
         return intent;
     }
@@ -34,9 +36,11 @@ public class IngredientsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        if (!intent.hasExtra(EXTRA_INGREDIENTS)) {
-            throw new IllegalArgumentException("Activity started without required intent extra - EXTRA_INGREDIENTS");
+        if (!intent.hasExtra(EXTRA_INGREDIENTS) || !intent.hasExtra(EXTRA_RECIPE_NAME)) {
+            throw new IllegalArgumentException("Activity started without required intent extra - EXTRA_INGREDIENTS or EXTRA_RECIPE_NAME");
         }
+        getSupportActionBar().setTitle(intent.getStringExtra(EXTRA_RECIPE_NAME));
+
         List<Ingredient> ingredients = intent.getParcelableArrayListExtra(EXTRA_INGREDIENTS);
 
         FragmentManager fragmentManager = getSupportFragmentManager();

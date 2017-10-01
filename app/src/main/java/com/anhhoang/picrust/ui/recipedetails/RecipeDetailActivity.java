@@ -54,6 +54,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     private StepContracts.Presenter stepPresenter;
     private RecipeDetailAdapter recipeDetailAdapter;
     private boolean isFirstStart;
+    private String recipeName;
 
     public static Intent getStartingIntent(Context context, int recipeId) {
         Intent intent = new Intent(context, RecipeDetailActivity.class);
@@ -146,7 +147,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
             }
             changeFragment(ingredientsFragment);
         } else {
-            startActivity(IngredientsActivity.getStartingIntent(this, ingredients));
+            startActivity(IngredientsActivity.getStartingIntent(this, ingredients, recipeName));
         }
     }
 
@@ -163,12 +164,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
             changeFragment(stepFragment);
         } else {
-            startActivity(StepActivity.getStartingIntent(this, stepId, steps));
+            startActivity(StepActivity.getStartingIntent(this, stepId, steps, recipeName));
         }
     }
 
     @Override
     public void showDetail(RecipeModel recipeModel) {
+        recipeName = recipeModel.recipe.getName();
+        getSupportActionBar().setTitle(recipeName);
+
         recipeDetailAdapter.setRecipeModel(recipeModel);
 
         if (isFirstStart && twoPane) {
