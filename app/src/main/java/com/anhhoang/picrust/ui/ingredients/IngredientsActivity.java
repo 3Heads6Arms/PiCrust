@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientsActivity extends AppCompatActivity {
-    private static final String EXTRA_INGREDIENTS = "ExtraIngredients";
+    public static final String EXTRA_INGREDIENTS = "ExtraIngredients";
     private static final String EXTRA_RECIPE_NAME = "ExtraRecipeName";
 
     public static Intent getStartingIntent(Context context, List<Ingredient> ingredients, String recipeName) {

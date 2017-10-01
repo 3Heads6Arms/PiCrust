@@ -27,6 +27,7 @@ import com.anhhoang.picrust.ui.step.StepActivity;
 import com.anhhoang.picrust.ui.step.StepContracts;
 import com.anhhoang.picrust.ui.step.StepFragment;
 import com.anhhoang.picrust.ui.step.StepPresenter;
+import com.anhhoang.picrust.widgets.PiCrustWidget;
 
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     private StepContracts.Presenter stepPresenter;
     private RecipeDetailAdapter recipeDetailAdapter;
     private boolean isFirstStart;
+    private boolean shouldOpenIngredients;
     private String recipeName;
 
     public static Intent getStartingIntent(Context context, int recipeId) {
@@ -79,6 +81,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         }
 
         int recipeId = intent.getIntExtra(EXTRA_RECIPE_ID, 0);
+        shouldOpenIngredients = intent.getIntExtra(PiCrustWidget.EXTRA_OPEN_INGREDIENTS, -1) == PiCrustWidget.INGREDIENTS_REQUEST_CODE;
 
         // Inject Presenter into activity
         new RecipeDetailPresenter(
@@ -175,7 +178,9 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
         recipeDetailAdapter.setRecipeModel(recipeModel);
 
-        if (isFirstStart && twoPane) {
+        if (isFirstStart && twoPane || shouldOpenIngredients) {
+            shouldOpenIngredients = false;
+            isFirstStart = false;
             showIngredients(recipeModel.ingredients);
         }
     }

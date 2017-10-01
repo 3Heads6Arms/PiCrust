@@ -15,4 +15,7 @@
     <string name="ingredients_empty_description">We\'re trying to catch the thief! Hang on!</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
+    <string name="add_widget">Pi Crust widget</string>
+    <string name="last_accessed_recipe_key" translatable="false">lastAccessedRecipeId</string>
+    <string name="you_need_to_checkout_out_recipes_first">You need to checkout out recipes first!</string>
 </resources>

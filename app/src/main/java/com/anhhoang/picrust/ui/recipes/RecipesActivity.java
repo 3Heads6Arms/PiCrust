@@ -1,7 +1,9 @@
 package com.anhhoang.picrust.ui.recipes;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -130,6 +132,12 @@ public class RecipesActivity extends AppCompatActivity implements RecipesContrac
 
     @Override
     public void showRecipeDetail(int recipeId) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences
+                .edit()
+                .putInt(getString(R.string.last_accessed_recipe_key), recipeId)
+                .commit();
+
         startActivity(RecipeDetailActivity.getStartingIntent(this, recipeId));
     }
 
