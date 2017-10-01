@@ -13,9 +13,11 @@ import com.anhhoang.picrust.data.Step;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepActivity extends AppCompatActivity {
-    public static final String EXTRA_STEPS = "ExtraSteps";
+public class StepActivity extends AppCompatActivity implements StepFragment.OnStepNavigationListener {
+    private static final String EXTRA_STEPS = "ExtraSteps";
     private static final String EXTRA_STEP_ID = "ExtraStepId";
+    private static final String PRESENTER_KEY = "PresenterKey";
+
     private StepPresenter stepPresenter;
 
     public static Intent getStartingIntent(Context context, int stepId, List<Step> steps) {
@@ -39,11 +41,43 @@ public class StepActivity extends AppCompatActivity {
             throw new IllegalArgumentException("StepActivity started without required extra EXTRA_STEPS");
         }
 
-        List<Step> steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
-        int stepId = intent.getIntExtra(EXTRA_STEP_ID, 0);
-
         FragmentManager fragmentManager = getSupportFragmentManager();
-        StepFragment stepFragment = (StepFragment) fragmentManager.findFragmentById(R.id.step_fragment);
-        stepPresenter = new StepPresenter(stepFragment, stepId, steps);
+
+        StepFragment stepFragment;
+        if (savedInstanceState != null) {
+            stepFragment = (StepFragment) fragmentManager.findFragmentByTag(StepFragment.TAG);
+            stepPresenter = savedInstanceState.getParcelable(PRESENTER_KEY);
+            stepPresenter.switchView(stepFragment);
+        } else {
+            List<Step> steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
+            int stepId = intent.getIntExtra(EXTRA_STEP_ID, 0);
+            stepFragment = new StepFragment();
+            stepPresenter = new StepPresenter(stepFragment, stepId, steps);
+
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.step_fragment, stepFragment, StepFragment.TAG)
+                    .commit();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(PRESENTER_KEY, stepPresenter);
+    }
+
+    @Override
+    public void onStepChanged() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        StepFragment newStepFragment = new StepFragment();
+
+        stepPresenter.switchView(newStepFragment);
+
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.step_fragment, newStepFragment)
+                .commit();
     }
 }

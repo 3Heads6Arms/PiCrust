@@ -19,4 +19,5 @@
     <string name="title_activity_step">StepActivity</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
+    <string name="step_fragment_tag">StepFragmentTag</string>
 </resources>

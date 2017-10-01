@@ -37,17 +37,22 @@ import butterknife.BindBool;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Optional;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class StepFragment extends Fragment implements StepContracts.View {
+    public static final String TAG = "StepFragmentTag";
+
     @BindView(R.id.step_video_player)
     SimpleExoPlayerView stepPlayerView;
     @BindView(R.id.step_description_text_view)
     TextView tvStepDescription;
+    @Nullable
     @BindView(R.id.previous_button)
     Button btnPrevious;
+    @Nullable
     @BindView(R.id.next_button)
     Button btnNext;
     @BindView(R.id.detail_view)
@@ -85,7 +90,9 @@ public class StepFragment extends Fragment implements StepContracts.View {
             ButterKnife.bind(this, view);
         } else {
             ViewGroup parent = (ViewGroup) view.getParent();
-            parent.removeView(view);
+            if (parent != null) {
+                parent.removeView(view);
+            }
         }
 
 
@@ -95,6 +102,10 @@ public class StepFragment extends Fragment implements StepContracts.View {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (!(getActivity() instanceof OnStepNavigationListener)) {
+            throw new RuntimeException("Activity must implements OnStepNavigationListener");
+        }
+
         setImmersiveModeIfValid();
     }
 
@@ -164,14 +175,18 @@ public class StepFragment extends Fragment implements StepContracts.View {
 
     @Override
     public void showSelectedStep() {
-        // TODO:
+        if (getActivity() instanceof OnStepNavigationListener) {
+            ((OnStepNavigationListener) getActivity()).onStepChanged();
+        }
     }
 
+    @Optional
     @OnClick(R.id.previous_button)
     public void onPreviousClicked() {
         presenter.openPreviousStep();
     }
 
+    @Optional
     @OnClick(R.id.next_button)
     public void onNextClicked() {
         presenter.openNextStep();
@@ -181,9 +196,7 @@ public class StepFragment extends Fragment implements StepContracts.View {
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
 
-        if (stepExoPlayer == null) {
-            stepExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
-        }
+        stepExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
 
         MediaSource mediaSource = new ExtractorMediaSource(
                 mediaUri,
@@ -199,9 +212,11 @@ public class StepFragment extends Fragment implements StepContracts.View {
     }
 
     private void releasePlayer() {
-        stepExoPlayer.stop();
-        stepExoPlayer.release();
-        stepExoPlayer = null;
+        if (stepExoPlayer != null) {
+            stepExoPlayer.stop();
+            stepExoPlayer.release();
+            stepExoPlayer = null;
+        }
     }
 
     private void setImmersiveModeIfValid() {
@@ -230,5 +245,9 @@ public class StepFragment extends Fragment implements StepContracts.View {
             detailView.setVisibility(View.VISIBLE);
             stepPlayerView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.player_height);
         }
+    }
+
+    interface OnStepNavigationListener {
+        void onStepChanged();
     }
 }
