@@ -4,10 +4,8 @@ import android.content.Context;
 
 import com.anhhoang.picrust.data.network.PiCrustApiService;
 import com.anhhoang.picrust.data.source.RecipesRepository;
-import com.anhhoang.picrust.data.source.StepsRepository;
 import com.anhhoang.picrust.data.source.local.PiCrustDatabase;
 import com.anhhoang.picrust.data.source.local.RecipesLocalDataSource;
-import com.anhhoang.picrust.data.source.local.StepsLocalDataSource;
 import com.anhhoang.picrust.data.source.remote.RecipesRemoteDataSource;
 import com.anhhoang.picrust.utils.AppExecutor;
 
@@ -30,18 +28,5 @@ public class Injection {
         );
 
         return recipesRepository;
-    }
-
-    public static StepsRepository provideStepsRepository(Context context, int recipeId) {
-        checkNotNull(context, "context cannot be null!");
-
-        StepsRepository stepsRepository = StepsRepository.getInstance(
-                StepsLocalDataSource.getInstance(
-                        new AppExecutor(),
-                        PiCrustDatabase.getInstance(context).stepsDao(),
-                        recipeId),
-                recipeId);
-
-        return stepsRepository;
     }
 }
