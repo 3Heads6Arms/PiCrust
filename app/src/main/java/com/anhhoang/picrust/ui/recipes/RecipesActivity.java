@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 
 import com.anhhoang.picrust.Injection;
 import com.anhhoang.picrust.R;
+import com.anhhoang.picrust.SimpleIdlingResource;
 import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.ui.recipedetails.RecipeDetailActivity;
 
@@ -37,6 +41,16 @@ public class RecipesActivity extends AppCompatActivity implements RecipesContrac
 
     private RecipesContracts.Presenter presenter;
     private RecipesAdapter recipesAdapter;
+    private SimpleIdlingResource mIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +62,10 @@ public class RecipesActivity extends AppCompatActivity implements RecipesContrac
         setSupportActionBar(toolbar);
 
         // Inject Presenter into Activity
-        new RecipesPresenter(this, Injection.provideRecipesRepository(getApplicationContext()));
+        new RecipesPresenter(
+                this,
+                Injection.provideRecipesRepository(getApplicationContext()),
+                (SimpleIdlingResource) getIdlingResource());
 
         Configuration configuration = getResources().getConfiguration();
 

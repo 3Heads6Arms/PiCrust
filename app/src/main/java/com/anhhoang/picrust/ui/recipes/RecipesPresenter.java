@@ -1,5 +1,8 @@
 package com.anhhoang.picrust.ui.recipes;
 
+import android.support.annotation.Nullable;
+
+import com.anhhoang.picrust.SimpleIdlingResource;
 import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.data.source.BaseDataSource;
 
@@ -12,13 +15,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 
 public class RecipesPresenter implements RecipesContracts.Presenter {
+    private final SimpleIdlingResource idlingResource;
     private RecipesContracts.View view;
     private BaseDataSource<RecipeModel> repository;
 
-    public RecipesPresenter(RecipesContracts.View view, BaseDataSource<RecipeModel> repository) {
+    public RecipesPresenter(RecipesContracts.View view, BaseDataSource<RecipeModel> repository, @Nullable SimpleIdlingResource idlingResource) {
         this.view = checkNotNull(view);
         this.repository = checkNotNull(repository);
-
+        this.idlingResource = idlingResource;
         view.setPresenter(this);
     }
 
@@ -33,6 +37,9 @@ public class RecipesPresenter implements RecipesContracts.Presenter {
             repository.refresh();
         }
 
+        if (idlingResource != null) {
+            idlingResource.setIdleState(false);
+        }
         view.showLoadingIndicator(true);
         view.showErrorView(false, null);
         repository.get(new BaseDataSource.ResultsCallback<RecipeModel>() {
@@ -41,6 +48,7 @@ public class RecipesPresenter implements RecipesContracts.Presenter {
                 view.showLoadingIndicator(false);
                 view.showErrorView(false, null);
                 view.showRecipes(result);
+                idlingResource.setIdleState(true);
             }
 
             @Override
@@ -56,6 +64,7 @@ public class RecipesPresenter implements RecipesContracts.Presenter {
 
                 view.showLoadingIndicator(false);
                 view.showErrorView(true, recipeErrorEnum);
+                idlingResource.setIdleState(true);
             }
         });
     }
