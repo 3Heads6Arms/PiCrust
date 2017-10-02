@@ -28,6 +28,6 @@ public interface StepContracts {
 
         void switchView(View view);
 
-        void setStep(int stepId);
+        void setStep(long stepId);
     }
 }

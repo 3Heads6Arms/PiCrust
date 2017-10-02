@@ -10,7 +10,7 @@ import java.util.List;
 public interface BaseDataSource<T> {
     void get(ResultsCallback<T> callback);
 
-    void get(int id, ResultCallback<T> callback);
+    void get(long id, ResultCallback<T> callback);
 
     void save(Collection<T> entities);
 

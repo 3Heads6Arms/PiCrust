@@ -1,8 +1,9 @@
 package com.anhhoang.picrust.data.source.local;
 
+import com.anhhoang.picrust.data.DaoSession;
 import com.anhhoang.picrust.data.Ingredient;
+import com.anhhoang.picrust.data.Recipe;
 import com.anhhoang.picrust.data.Step;
-import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.data.source.BaseDataSource;
 import com.anhhoang.picrust.utils.AppExecutor;
 
@@ -13,32 +14,32 @@ import java.util.List;
  * Created by anh.hoang on 9/23/17.
  */
 
-public class RecipesLocalDataSource implements BaseDataSource<RecipeModel> {
+public class RecipesLocalDataSource implements BaseDataSource<Recipe> {
     private static RecipesLocalDataSource INSTANCE;
 
-    private final PiCrustDatabase piCrustDatabase;
+    private final DaoSession daoSession;
     private final AppExecutor executor;
 
-    private RecipesLocalDataSource(AppExecutor executor, PiCrustDatabase piCrustDatabase) {
+    private RecipesLocalDataSource(AppExecutor executor, DaoSession daoSession) {
         this.executor = executor;
-        this.piCrustDatabase = piCrustDatabase;
+        this.daoSession = daoSession;
     }
 
-    public static RecipesLocalDataSource getInstance(AppExecutor executor, PiCrustDatabase piCrustDatabase) {
+    public static RecipesLocalDataSource getInstance(AppExecutor executor, DaoSession daoSession) {
         if (INSTANCE == null) {
-            INSTANCE = new RecipesLocalDataSource(executor, piCrustDatabase);
+            INSTANCE = new RecipesLocalDataSource(executor, daoSession);
         }
 
         return INSTANCE;
     }
 
     @Override
-    public void get(final ResultsCallback<RecipeModel> callback) {
+    public void get(final ResultsCallback<Recipe> callback) {
         executor.diskIO()
                 .execute(new Runnable() {
                     @Override
                     public void run() {
-                        final List<RecipeModel> recipes = piCrustDatabase.recipesDao().getAll();
+                        final List<Recipe> recipes = daoSession.getRecipeDao().loadAll();
 
                         executor.mainThread()
                                 .execute(new Runnable() {
@@ -57,12 +58,12 @@ public class RecipesLocalDataSource implements BaseDataSource<RecipeModel> {
     }
 
     @Override
-    public void get(final int id, final ResultCallback<RecipeModel> callback) {
+    public void get(final long id, final ResultCallback<Recipe> callback) {
         executor.diskIO()
                 .execute(new Runnable() {
                     @Override
                     public void run() {
-                        final RecipeModel recipe = piCrustDatabase.recipesDao().get(id);
+                        final Recipe recipe = daoSession.getRecipeDao().load(id);
 
                         executor.mainThread()
                                 .execute(new Runnable() {
@@ -85,22 +86,22 @@ public class RecipesLocalDataSource implements BaseDataSource<RecipeModel> {
      * @param entities - RecipeModel, contains detail about the recipe
      */
     @Override
-    public void save(final Collection<RecipeModel> entities) {
+    public void save(final Collection<Recipe> entities) {
         executor.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                for (RecipeModel model : entities) {
-                    piCrustDatabase.recipesDao().insert(model.recipe);
+                for (Recipe model : entities) {
+                    daoSession.getRecipeDao().insert(model);
 
-                    for (Step step : model.steps) {
-                        step.setRecipeId(model.recipe.getId());
+                    for (Step step : model.getSteps()) {
+                        step.setRecipeId(model.getId());
                     }
-                    piCrustDatabase.stepsDao().insert(model.steps.toArray(new Step[model.steps.size()]));
+                    daoSession.getStepDao().insertInTx(model.getSteps());
 
-                    for (Ingredient ingredient : model.ingredients) {
-                        ingredient.setRecipeId(model.recipe.getId());
+                    for (Ingredient ingredient : model.getIngredients()) {
+                        ingredient.setRecipeId(model.getId());
                     }
-                    piCrustDatabase.ingredientsDao().insert(model.ingredients.toArray(new Ingredient[model.ingredients.size()]));
+                    daoSession.getIngredientDao().insertInTx(model.getIngredients());
                 }
             }
         });

@@ -1,27 +1,20 @@
 package com.anhhoang.picrust.data;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.anhhoang.picrust.data.models.RecipeItem;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Generated;
+
 /**
  * Created by anh.hoang on 9/22/17.
  */
 
-@Entity(
-        tableName = "ingredients",
-        foreignKeys = @ForeignKey(
-                entity = Recipe.class,
-                parentColumns = "id",
-                childColumns = "recipeId",
-                onDelete = ForeignKey.CASCADE
-        )
-)
+@Entity
 public class Ingredient implements RecipeItem, Parcelable {
     public static final Parcelable.Creator<Ingredient> CREATOR = new Parcelable.Creator<Ingredient>() {
         @Override
@@ -34,19 +27,17 @@ public class Ingredient implements RecipeItem, Parcelable {
             return new Ingredient[size];
         }
     };
-    @PrimaryKey(autoGenerate = true)
-    private final int id;
-    private final double quantity;
-    private final String measure;
-    private final String ingredient;
-    @ForeignKey(
-            entity = Recipe.class,
-            parentColumns = {"id"},
-            childColumns = {"recipeId"},
-            onDelete = ForeignKey.CASCADE)
-    private int recipeId;
 
-    @Ignore
+    private long id;
+    @NotNull
+    private double quantity;
+    @NotNull
+    private String measure;
+    @NotNull
+    private String ingredient;
+
+    private long recipeId;
+
     public Ingredient(double quantity, String measure, String ingredient, int recipeId) {
         this(0, quantity, measure, ingredient, recipeId);
     }
@@ -59,37 +50,26 @@ public class Ingredient implements RecipeItem, Parcelable {
         this.recipeId = recipeId;
     }
 
-    @Ignore
     protected Ingredient(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.quantity = in.readDouble();
         this.measure = in.readString();
         this.ingredient = in.readString();
-        this.recipeId = in.readInt();
+        this.recipeId = in.readLong();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public double getQuantity() {
-        return quantity;
-    }
-
-    public String getMeasure() {
-        return measure;
-    }
-
-    public String getIngredient() {
-        return ingredient;
-    }
-
-    public int getRecipeId() {
-        return recipeId;
-    }
-
-    public void setRecipeId(int recipeId) {
+    @Generated(hash = 1377901256)
+    public Ingredient(long id, double quantity, @NotNull String measure, @NotNull String ingredient,
+            long recipeId) {
+        this.id = id;
+        this.quantity = quantity;
+        this.measure = measure;
+        this.ingredient = ingredient;
         this.recipeId = recipeId;
+    }
+
+    @Generated(hash = 1584798654)
+    public Ingredient() {
     }
 
     @Override
@@ -99,10 +79,50 @@ public class Ingredient implements RecipeItem, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeDouble(this.quantity);
         dest.writeString(this.measure);
         dest.writeString(this.ingredient);
-        dest.writeInt(this.recipeId);
+        dest.writeLong(this.recipeId);
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public double getQuantity() {
+        return this.quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getMeasure() {
+        return this.measure;
+    }
+
+    public void setMeasure(String measure) {
+        this.measure = measure;
+    }
+
+    public String getIngredient() {
+        return this.ingredient;
+    }
+
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public long getRecipeId() {
+        return this.recipeId;
+    }
+
+    public void setRecipeId(long recipeId) {
+        this.recipeId = recipeId;
     }
 }

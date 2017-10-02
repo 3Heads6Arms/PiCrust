@@ -2,7 +2,8 @@ package com.anhhoang.picrust.data.source;
 
 import android.support.annotation.NonNull;
 
-import com.anhhoang.picrust.data.models.RecipeModel;
+import com.anhhoang.picrust.data.Recipe;
+import com.anhhoang.picrust.data.models.RecipeRequest;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,23 +15,23 @@ import java.util.Map;
  * Created by anh.hoang on 9/23/17.
  */
 
-public class RecipesRepository implements BaseDataSource<RecipeModel> {
+public class RecipesRepository implements BaseDataSource<Recipe> {
     private static RecipesRepository INSTANCE;
 
-    private BaseDataSource<RecipeModel> recipesLocalDataSource;
-    private BaseDataSource<RecipeModel> recipesRemoteDataSource;
+    private BaseDataSource<Recipe> recipesLocalDataSource;
+    private BaseDataSource<Recipe> recipesRemoteDataSource;
 
-    private Map<Integer, RecipeModel> cachedRecipes;
+    private Map<Long, Recipe> cachedRecipes;
     private boolean forceLoad;
 
-    private RecipesRepository(@NonNull BaseDataSource<RecipeModel> recipesLocalDataSource,
-                              @NonNull BaseDataSource<RecipeModel> recipesRemoteDataSource) {
+    private RecipesRepository(@NonNull BaseDataSource<Recipe> recipesLocalDataSource,
+                              @NonNull BaseDataSource<Recipe> recipesRemoteDataSource) {
         this.recipesLocalDataSource = recipesLocalDataSource;
         this.recipesRemoteDataSource = recipesRemoteDataSource;
     }
 
-    public static RecipesRepository getInstance(@NonNull BaseDataSource<RecipeModel> recipesLocalDataSource,
-                                                @NonNull BaseDataSource<RecipeModel> recipesRemoteDataSource) {
+    public static RecipesRepository getInstance(@NonNull BaseDataSource<Recipe> recipesLocalDataSource,
+                                                @NonNull BaseDataSource<Recipe> recipesRemoteDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new RecipesRepository(recipesLocalDataSource, recipesRemoteDataSource);
         }
@@ -39,7 +40,7 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
     }
 
     @Override
-    public void get(final ResultsCallback<RecipeModel> callback) {
+    public void get(final ResultsCallback<Recipe> callback) {
         if (cachedRecipes != null && !forceLoad) {
             callback.onLoaded(new ArrayList<>(cachedRecipes.values()));
             return;
@@ -48,9 +49,9 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
         if (!forceLoad) {
             getFromRemote(callback);
         } else {
-            this.recipesLocalDataSource.get(new ResultsCallback<RecipeModel>() {
+            this.recipesLocalDataSource.get(new ResultsCallback<Recipe>() {
                 @Override
-                public void onLoaded(List<RecipeModel> result) {
+                public void onLoaded(List<Recipe> result) {
                     refreshCache(result);
                     callback.onLoaded(result);
                 }
@@ -64,7 +65,7 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
     }
 
     @Override
-    public void get(int id, ResultCallback<RecipeModel> callback) {
+    public void get(long id, ResultCallback<Recipe> callback) {
         if (cachedRecipes != null && cachedRecipes.containsKey(id)) {
             callback.onLoaded(cachedRecipes.get(id));
             return;
@@ -74,7 +75,7 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
     }
 
     @Override
-    public void save(Collection<RecipeModel> entities) {
+    public void save(Collection<Recipe> entities) {
         throw new UnsupportedOperationException("RecipesRepository does not support such operation.");
     }
 
@@ -83,10 +84,10 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
         this.forceLoad = true;
     }
 
-    private void getFromRemote(final ResultsCallback<RecipeModel> callback) {
-        recipesRemoteDataSource.get(new ResultsCallback<RecipeModel>() {
+    private void getFromRemote(final ResultsCallback<Recipe> callback) {
+        recipesRemoteDataSource.get(new ResultsCallback<Recipe>() {
             @Override
-            public void onLoaded(List<RecipeModel> result) {
+            public void onLoaded(List<Recipe> result) {
                 if (result != null && result.size() > 0) {
                     refreshCache(result);
                     recipesLocalDataSource.save(result);
@@ -103,15 +104,15 @@ public class RecipesRepository implements BaseDataSource<RecipeModel> {
         });
     }
 
-    private void refreshCache(List<RecipeModel> recipes) {
+    private void refreshCache(List<Recipe> recipes) {
         if (cachedRecipes == null) {
             cachedRecipes = new LinkedHashMap<>();
         }
         cachedRecipes.clear();
 
         if (recipes != null) {
-            for (RecipeModel recipe : recipes) {
-                cachedRecipes.put(recipe.recipe.getId(), recipe);
+            for (Recipe recipe : recipes) {
+                cachedRecipes.put(recipe.getId(), recipe);
             }
         }
     }

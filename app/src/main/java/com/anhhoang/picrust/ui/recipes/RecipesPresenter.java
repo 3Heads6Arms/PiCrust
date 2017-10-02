@@ -3,7 +3,7 @@ package com.anhhoang.picrust.ui.recipes;
 import android.support.annotation.Nullable;
 
 import com.anhhoang.picrust.SimpleIdlingResource;
-import com.anhhoang.picrust.data.models.RecipeModel;
+import com.anhhoang.picrust.data.Recipe;
 import com.anhhoang.picrust.data.source.BaseDataSource;
 
 import java.util.List;
@@ -17,9 +17,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class RecipesPresenter implements RecipesContracts.Presenter {
     private final SimpleIdlingResource idlingResource;
     private RecipesContracts.View view;
-    private BaseDataSource<RecipeModel> repository;
+    private BaseDataSource<Recipe> repository;
 
-    public RecipesPresenter(RecipesContracts.View view, BaseDataSource<RecipeModel> repository, @Nullable SimpleIdlingResource idlingResource) {
+    public RecipesPresenter(RecipesContracts.View view, BaseDataSource<Recipe> repository, @Nullable SimpleIdlingResource idlingResource) {
         this.view = checkNotNull(view);
         this.repository = checkNotNull(repository);
         this.idlingResource = idlingResource;
@@ -42,9 +42,9 @@ public class RecipesPresenter implements RecipesContracts.Presenter {
         }
         view.showLoadingIndicator(true);
         view.showErrorView(false, null);
-        repository.get(new BaseDataSource.ResultsCallback<RecipeModel>() {
+        repository.get(new BaseDataSource.ResultsCallback<Recipe>() {
             @Override
-            public void onLoaded(List<RecipeModel> result) {
+            public void onLoaded(List<Recipe> result) {
                 view.showLoadingIndicator(false);
                 view.showErrorView(false, null);
                 view.showRecipes(result);
@@ -70,7 +70,7 @@ public class RecipesPresenter implements RecipesContracts.Presenter {
     }
 
     @Override
-    public void openRecipeDetail(RecipeModel recipe) {
-        view.showRecipeDetail(recipe.recipe.getId());
+    public void openRecipeDetail(Recipe recipe) {
+        view.showRecipeDetail(recipe.getId());
     }
 }

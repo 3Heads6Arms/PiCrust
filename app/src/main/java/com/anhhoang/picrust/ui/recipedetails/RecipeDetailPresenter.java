@@ -1,9 +1,9 @@
 package com.anhhoang.picrust.ui.recipedetails;
 
 import com.anhhoang.picrust.data.Ingredient;
+import com.anhhoang.picrust.data.Recipe;
 import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeItem;
-import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.data.source.BaseDataSource;
 import com.anhhoang.picrust.ui.recipedetails.RecipeDetailContracts.Presenter;
 
@@ -18,10 +18,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RecipeDetailPresenter implements Presenter {
     private final RecipeDetailContracts.View view;
-    private final BaseDataSource<RecipeModel> repository;
-    private final int recipeId;
+    private final BaseDataSource<Recipe> repository;
+    private final long recipeId;
 
-    public RecipeDetailPresenter(RecipeDetailContracts.View view, BaseDataSource<RecipeModel> repository, int recipeId) {
+    public RecipeDetailPresenter(RecipeDetailContracts.View view, BaseDataSource<Recipe> repository, long recipeId) {
         this.view = view;
         this.repository = repository;
         this.recipeId = recipeId;
@@ -34,15 +34,15 @@ public class RecipeDetailPresenter implements Presenter {
     }
 
     @Override
-    public void loadRecipe(int recipeId) {
+    public void loadRecipe(long recipeId) {
         view.showLoadingIndicator(true);
-        repository.get(recipeId, new BaseDataSource.ResultCallback<RecipeModel>() {
+        repository.get(recipeId, new BaseDataSource.ResultCallback<Recipe>() {
             @Override
-            public void onLoaded(RecipeModel result) {
+            public void onLoaded(Recipe result) {
                 checkNotNull(result, "Detail screen, data cannot be null");
                 view.showDetail(result);
                 view.showLoadingIndicator(false);
-                if (result.steps == null || result.steps.size() <= 0) {
+                if (result.getSteps() == null || result.getSteps().size() <= 0) {
                     view.showError(true);
                 }
             }
@@ -57,7 +57,7 @@ public class RecipeDetailPresenter implements Presenter {
 
 
     @Override
-    public void openStepDetail(int stepId, List<RecipeItem> recipeItems, Class tClass) {
+    public void openStepDetail(long stepId, List<RecipeItem> recipeItems, Class tClass) {
         if (Step.class == tClass) {
             view.showStep(stepId, transformList(recipeItems, Step.class));
         } else if (Ingredient.class == tClass) {

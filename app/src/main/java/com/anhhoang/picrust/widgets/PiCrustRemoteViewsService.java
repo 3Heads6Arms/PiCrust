@@ -6,10 +6,10 @@ import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.anhhoang.picrust.PiCrustApplication;
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.data.Ingredient;
-import com.anhhoang.picrust.data.models.RecipeModel;
-import com.anhhoang.picrust.data.source.local.PiCrustDatabase;
+import com.anhhoang.picrust.data.Recipe;
 
 import java.util.List;
 
@@ -32,10 +32,10 @@ public class PiCrustRemoteViewsService extends RemoteViewsService {
             @Override
             public void onDataSetChanged() {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                int recipeId = preferences.getInt(getApplicationContext().getString(R.string.last_accessed_recipe_key), -1);
-                RecipeModel recipe = PiCrustDatabase.getInstance(getApplicationContext()).recipesDao().get(recipeId);
+                long recipeId = preferences.getLong(getApplicationContext().getString(R.string.last_accessed_recipe_key), -1);
+                Recipe recipe = ((PiCrustApplication) getApplication()).getDaoSession().getRecipeDao().load(recipeId);
 
-                ingredients = recipe.ingredients;
+                ingredients = recipe.getIngredients();
             }
 
             @Override

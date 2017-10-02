@@ -1,7 +1,6 @@
 package com.anhhoang.picrust.data.source.remote;
 
 import com.anhhoang.picrust.data.Recipe;
-import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.data.models.RecipeRequest;
 import com.anhhoang.picrust.data.network.PiCrustApiService;
 import com.anhhoang.picrust.data.source.BaseDataSource;
@@ -19,7 +18,7 @@ import retrofit2.Response;
  * Created by anh.hoang on 9/23/17.
  */
 
-public class RecipesRemoteDataSource implements BaseDataSource<RecipeModel> {
+public class RecipesRemoteDataSource implements BaseDataSource<Recipe> {
     private static RecipesRemoteDataSource INSTANCE;
 
     private final PiCrustApiService piCrustApiService;
@@ -42,7 +41,7 @@ public class RecipesRemoteDataSource implements BaseDataSource<RecipeModel> {
      * @param callback
      */
     @Override
-    public void get(final ResultsCallback<RecipeModel> callback) {
+    public void get(final ResultsCallback<Recipe> callback) {
         this.piCrustApiService
                 .getRecipes()
                 .enqueue(new Callback<List<RecipeRequest>>() {
@@ -51,19 +50,19 @@ public class RecipesRemoteDataSource implements BaseDataSource<RecipeModel> {
                         if (response.code() == HttpURLConnection.HTTP_OK) {
                             List<RecipeRequest> recipeRequests = response.body();
 
-                            List<RecipeModel> recipes = new ArrayList<RecipeModel>();
+                            List<Recipe> recipes = new ArrayList<Recipe>();
                             // Change request object into object that DB uses for its operations
                             for (RecipeRequest recipeRequest : recipeRequests) {
-                                RecipeModel recipeModel = new RecipeModel();
-                                recipeModel.recipe = new Recipe(
+                                Recipe recipe = new Recipe();
+                                recipe = new Recipe(
                                         recipeRequest.getId(),
                                         recipeRequest.getName(),
                                         recipeRequest.getServings(),
                                         recipeRequest.getImage());
-                                recipeModel.ingredients = recipeRequest.getIngredients();
-                                recipeModel.steps = recipeRequest.getSteps();
+                                recipe.setIngredients(recipeRequest.getIngredients());
+                                recipe.setSteps(recipeRequest.getSteps());
 
-                                recipes.add(recipeModel);
+                                recipes.add(recipe);
                             }
 
                             callback.onLoaded(recipes);
@@ -80,7 +79,7 @@ public class RecipesRemoteDataSource implements BaseDataSource<RecipeModel> {
     }
 
     @Override
-    public void get(int id, ResultCallback<RecipeModel> callback) {
+    public void get(long id, ResultCallback<Recipe> callback) {
         throw new UnsupportedOperationException(RecipesRemoteDataSource.class.getSimpleName() + " does not support such operation.");
     }
 
@@ -90,7 +89,7 @@ public class RecipesRemoteDataSource implements BaseDataSource<RecipeModel> {
     }
 
     @Override
-    public void save(Collection<RecipeModel> entities) {
+    public void save(Collection<Recipe> entities) {
         throw new UnsupportedOperationException(RecipesRemoteDataSource.class.getSimpleName() + " does not support such operation.");
     }
 }

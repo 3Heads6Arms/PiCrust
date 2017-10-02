@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.data.Ingredient;
+import com.anhhoang.picrust.data.Recipe;
 import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeItem;
-import com.anhhoang.picrust.data.models.RecipeModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +25,10 @@ import butterknife.ButterKnife;
 public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapter.ViewHolder> {
 
     private final OnItemClickListener onItemClickListener;
-    private RecipeModel recipeModel;
+    private Recipe recipeModel;
     private List<RecipeItem> steps;
 
-    public RecipeDetailAdapter(RecipeModel recipeModel, OnItemClickListener onItemClickListener) {
+    public RecipeDetailAdapter(Recipe recipeModel, OnItemClickListener onItemClickListener) {
         this.recipeModel = recipeModel;
         setupSteps(recipeModel);
         this.onItemClickListener = onItemClickListener;
@@ -61,15 +61,15 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
         return this.steps == null ? 0 : this.steps.size();
     }
 
-    public void setRecipeModel(RecipeModel recipeModel) {
+    public void setRecipeModel(Recipe recipeModel) {
         setupSteps(recipeModel);
         notifyDataSetChanged();
     }
 
-    private void setupSteps(RecipeModel recipeModel) {
+    private void setupSteps(Recipe recipeModel) {
         this.recipeModel = recipeModel;
-        if (recipeModel != null && recipeModel.steps != null && recipeModel.steps.size() > 0) {
-            this.steps = new ArrayList<RecipeItem>(recipeModel.steps);
+        if (recipeModel != null && recipeModel.getSteps() != null && recipeModel.getSteps().size() > 0) {
+            this.steps = new ArrayList<RecipeItem>(recipeModel.getSteps());
             // Add new placeholder Ingredient to the present it as item
             this.steps.add(0, new Ingredient(0, null, null, 0));
         } else {
@@ -78,7 +78,7 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
     }
 
     interface OnItemClickListener {
-        void onClick(int stepId, List<RecipeItem> items, Class tClass);
+        void onClick(long stepId, List<RecipeItem> items, Class tClass);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -95,9 +95,9 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
                 public void onClick(View view) {
                     if (itemView.getTag() instanceof Step) {
                         Step step = (Step) itemView.getTag();
-                        onItemClickListener.onClick(step.getId(), new ArrayList<RecipeItem>(recipeModel.steps), Step.class);
+                        onItemClickListener.onClick(step.getId(), new ArrayList<RecipeItem>(recipeModel.getSteps()), Step.class);
                     } else {
-                        onItemClickListener.onClick(0, new ArrayList<RecipeItem>(recipeModel.ingredients), Ingredient.class);
+                        onItemClickListener.onClick(0, new ArrayList<RecipeItem>(recipeModel.getIngredients()), Ingredient.class);
                     }
                 }
             });

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.anhhoang.picrust.R;
-import com.anhhoang.picrust.data.models.RecipeModel;
+import com.anhhoang.picrust.data.Recipe;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,11 +22,11 @@ import butterknife.ButterKnife;
  */
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder> {
-    private List<RecipeModel> recipes;
+    private List<Recipe> recipes;
     private int itemViewRes;
     private OnClickListener onClickListener;
 
-    public RecipesAdapter(List<RecipeModel> recipes, int itemViewRes, OnClickListener onClickListener) {
+    public RecipesAdapter(List<Recipe> recipes, int itemViewRes, OnClickListener onClickListener) {
         this.recipes = recipes;
         this.itemViewRes = itemViewRes;
         this.onClickListener = onClickListener;
@@ -43,13 +43,13 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        RecipeModel recipeModel = recipes.get(position);
+        Recipe recipeModel = recipes.get(position);
         holder.itemView.setTag(recipeModel);
-        holder.tvRecipeName.setText(recipeModel.recipe.getName());
+        holder.tvRecipeName.setText(recipeModel.getName());
 
-        if (!TextUtils.isEmpty(recipeModel.recipe.getImage())) {
+        if (!TextUtils.isEmpty(recipeModel.getImage())) {
             Picasso.with(holder.itemView.getContext())
-                    .load(recipeModel.recipe.getImage())
+                    .load(recipeModel.getImage())
                     .centerInside()
                     .error(R.drawable.ic_image_black_24dp)
                     .into(holder.ivRecipeThumbnail);
@@ -61,13 +61,13 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         return recipes == null ? 0 : recipes.size();
     }
 
-    public void setRecipes(List<RecipeModel> recipes) {
+    public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
         notifyDataSetChanged();
     }
 
     public interface OnClickListener {
-        void onClick(RecipeModel recipeModel);
+        void onClick(Recipe recipeModel);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -83,7 +83,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onClickListener.onClick((RecipeModel) itemView.getTag());
+                    onClickListener.onClick((Recipe) itemView.getTag());
                 }
             });
         }

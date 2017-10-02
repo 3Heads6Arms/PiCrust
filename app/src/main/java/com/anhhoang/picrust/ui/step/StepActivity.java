@@ -22,7 +22,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnSt
     private static final String PRESENTER_KEY = "PresenterKey";
     private StepPresenter stepPresenter;
 
-    public static Intent getStartingIntent(Context context, int stepId, List<Step> steps, String recipeName) {
+    public static Intent getStartingIntent(Context context, long stepId, List<Step> steps, String recipeName) {
         Intent intent = new Intent(context, StepActivity.class);
         intent.putExtra(EXTRA_STEPS, new ArrayList<>(steps));
         intent.putExtra(EXTRA_STEP_ID, stepId);
@@ -55,7 +55,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnSt
             stepPresenter.switchView(stepFragment);
         } else {
             List<Step> steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
-            int stepId = intent.getIntExtra(EXTRA_STEP_ID, 0);
+            long stepId = intent.getLongExtra(EXTRA_STEP_ID, 0);
             stepFragment = new StepFragment();
             stepPresenter = new StepPresenter(stepFragment, stepId, steps);
 

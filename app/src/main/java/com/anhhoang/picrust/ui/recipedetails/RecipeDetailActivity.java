@@ -14,11 +14,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.anhhoang.picrust.Injection;
+import com.anhhoang.picrust.PiCrustApplication;
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.data.Ingredient;
+import com.anhhoang.picrust.data.Recipe;
 import com.anhhoang.picrust.data.Step;
 import com.anhhoang.picrust.data.models.RecipeItem;
-import com.anhhoang.picrust.data.models.RecipeModel;
 import com.anhhoang.picrust.ui.ingredients.IngredientsActivity;
 import com.anhhoang.picrust.ui.ingredients.IngredientsContracts;
 import com.anhhoang.picrust.ui.ingredients.IngredientsFragment;
@@ -58,7 +59,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     private boolean shouldOpenIngredients;
     private String recipeName;
 
-    public static Intent getStartingIntent(Context context, int recipeId) {
+    public static Intent getStartingIntent(Context context, long recipeId) {
         Intent intent = new Intent(context, RecipeDetailActivity.class);
         intent.putExtra(EXTRA_RECIPE_ID, recipeId);
 
@@ -80,13 +81,13 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
             throw new IllegalArgumentException("Activity started without required intent extra EXTRA_RECIPE_ID");
         }
 
-        int recipeId = intent.getIntExtra(EXTRA_RECIPE_ID, 0);
+        long recipeId = intent.getLongExtra(EXTRA_RECIPE_ID, 0);
         shouldOpenIngredients = intent.getIntExtra(PiCrustWidget.EXTRA_OPEN_INGREDIENTS, -1) == PiCrustWidget.INGREDIENTS_REQUEST_CODE;
 
         // Inject Presenter into activity
         new RecipeDetailPresenter(
                 this,
-                Injection.provideRecipesRepository(getApplicationContext()),
+                Injection.provideRecipesRepository(((PiCrustApplication) getApplication()).getDaoSession()),
                 recipeId);
 
         recipeDetailAdapter = new RecipeDetailAdapter(null, this);
@@ -155,7 +156,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     }
 
     @Override
-    public void showStep(int stepId, List<Step> steps) {
+    public void showStep(long stepId, List<Step> steps) {
         if (twoPane) {
             StepFragment stepFragment = new StepFragment();
             if (stepPresenter == null) {
@@ -172,8 +173,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     }
 
     @Override
-    public void showDetail(RecipeModel recipeModel) {
-        recipeName = recipeModel.recipe.getName();
+    public void showDetail(Recipe recipeModel) {
+        recipeName = recipeModel.getName();
         getSupportActionBar().setTitle(recipeName);
 
         recipeDetailAdapter.setRecipeModel(recipeModel);
@@ -181,7 +182,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         if (isFirstStart && twoPane || shouldOpenIngredients) {
             shouldOpenIngredients = false;
             isFirstStart = false;
-            showIngredients(recipeModel.ingredients);
+            showIngredients(recipeModel.getIngredients());
         }
     }
 
@@ -208,7 +209,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     }
 
     @Override
-    public void onClick(int stepId, List<RecipeItem> items, Class tClass) {
+    public void onClick(long stepId, List<RecipeItem> items, Class tClass) {
         presenter.openStepDetail(stepId, items, tClass);
     }
 

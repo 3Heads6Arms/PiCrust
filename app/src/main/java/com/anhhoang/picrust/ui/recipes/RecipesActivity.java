@@ -17,9 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.anhhoang.picrust.Injection;
+import com.anhhoang.picrust.PiCrustApplication;
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.SimpleIdlingResource;
-import com.anhhoang.picrust.data.models.RecipeModel;
+import com.anhhoang.picrust.data.Recipe;
 import com.anhhoang.picrust.ui.recipedetails.RecipeDetailActivity;
 
 import java.util.List;
@@ -64,7 +65,7 @@ public class RecipesActivity extends AppCompatActivity implements RecipesContrac
         // Inject Presenter into Activity
         new RecipesPresenter(
                 this,
-                Injection.provideRecipesRepository(getApplicationContext()),
+                Injection.provideRecipesRepository(((PiCrustApplication)getApplication()).getDaoSession()),
                 (SimpleIdlingResource) getIdlingResource());
 
         Configuration configuration = getResources().getConfiguration();
@@ -110,7 +111,7 @@ public class RecipesActivity extends AppCompatActivity implements RecipesContrac
     }
 
     @Override
-    public void showRecipes(List<RecipeModel> recipes) {
+    public void showRecipes(List<Recipe> recipes) {
         recipesAdapter.setRecipes(recipes);
     }
 
@@ -148,18 +149,18 @@ public class RecipesActivity extends AppCompatActivity implements RecipesContrac
     }
 
     @Override
-    public void showRecipeDetail(int recipeId) {
+    public void showRecipeDetail(long recipeId) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences
                 .edit()
-                .putInt(getString(R.string.last_accessed_recipe_key), recipeId)
+                .putLong(getString(R.string.last_accessed_recipe_key), recipeId)
                 .commit();
 
         startActivity(RecipeDetailActivity.getStartingIntent(this, recipeId));
     }
 
     @Override
-    public void onClick(RecipeModel recipeModel) {
+    public void onClick(Recipe recipeModel) {
         presenter.openRecipeDetail(recipeModel);
     }
 }

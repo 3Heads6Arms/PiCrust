@@ -26,9 +26,9 @@ public class StepPresenter implements Presenter, Parcelable {
     };
     private final List<Step> steps;
     private StepContracts.View view;
-    private int currentStepId;
+    private long currentStepId;
 
-    public StepPresenter(StepContracts.View view, int stepId, List<Step> steps) {
+    public StepPresenter(StepContracts.View view, long stepId, List<Step> steps) {
         this.currentStepId = stepId;
         this.steps = steps;
         switchView(view);
@@ -36,7 +36,7 @@ public class StepPresenter implements Presenter, Parcelable {
 
     protected StepPresenter(Parcel in) {
         this.steps = in.createTypedArrayList(Step.CREATOR);
-        this.currentStepId = in.readInt();
+        this.currentStepId = in.readLong();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class StepPresenter implements Presenter, Parcelable {
     }
 
     @Override
-    public void setStep(int stepId) {
+    public void setStep(long stepId) {
         currentStepId = stepId;
     }
 
@@ -110,6 +110,6 @@ public class StepPresenter implements Presenter, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.steps);
-        dest.writeInt(this.currentStepId);
+        dest.writeLong(this.currentStepId);
     }
 }

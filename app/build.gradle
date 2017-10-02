@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 26
@@ -28,7 +29,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'android.arch.persistence.room:runtime:1.0.0-beta1'
+//    compile 'android.arch.persistence.room:runtime:1.0.0-beta1'
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
@@ -44,7 +45,7 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support:appcompat-v7:26.+'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-beta1'
+//    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-beta1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2', {
         exclude module: 'support-annotations'
@@ -54,4 +55,5 @@ dependencies {
         exclude module: 'appcompat-v7'
         exclude module: 'design'
     })
+    compile 'org.greenrobot:greendao:3.2.2'
 }
