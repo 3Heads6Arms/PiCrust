@@ -2,13 +2,16 @@ package com.anhhoang.picrust.ui.recipedetails;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -29,6 +32,7 @@ import com.anhhoang.picrust.ui.step.StepContracts;
 import com.anhhoang.picrust.ui.step.StepFragment;
 import com.anhhoang.picrust.ui.step.StepPresenter;
 import com.anhhoang.picrust.widgets.PiCrustWidget;
+import com.anhhoang.picrust.widgets.UpdateWidgetReceiver;
 
 import java.util.List;
 
@@ -58,6 +62,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     private boolean isFirstStart;
     private boolean shouldOpenIngredients;
     private String recipeName;
+    private long recipeId;
 
     public static Intent getStartingIntent(Context context, long recipeId) {
         Intent intent = new Intent(context, RecipeDetailActivity.class);
@@ -81,7 +86,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
             throw new IllegalArgumentException("Activity started without required intent extra EXTRA_RECIPE_ID");
         }
 
-        long recipeId = intent.getLongExtra(EXTRA_RECIPE_ID, 0);
+        recipeId = intent.getLongExtra(EXTRA_RECIPE_ID, 0);
         shouldOpenIngredients = intent.getIntExtra(PiCrustWidget.EXTRA_OPEN_INGREDIENTS, -1) == PiCrustWidget.INGREDIENTS_REQUEST_CODE;
 
         // Inject Presenter into activity
@@ -131,8 +136,23 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        } else if (item.getItemId() == R.id.action_display_to_widget) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            preferences
+                    .edit()
+                    .putLong(getString(R.string.widget_recipe_id_key), recipeId)
+                    .putString(getString(R.string.widget_recipe_name_key), recipeName)
+                    .commit();
+
+            sendBroadcast(UpdateWidgetReceiver.getStartingBroadcastIntent(this));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_recipe_detail, menu);
+        return true;
     }
 
     @Override

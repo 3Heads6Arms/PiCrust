@@ -32,7 +32,7 @@ public class PiCrustRemoteViewsService extends RemoteViewsService {
             @Override
             public void onDataSetChanged() {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                long recipeId = preferences.getLong(getApplicationContext().getString(R.string.last_accessed_recipe_key), -1);
+                long recipeId = preferences.getLong(getApplicationContext().getString(R.string.widget_recipe_id_key), -1);
                 Recipe recipe = ((PiCrustApplication) getApplication()).getDaoSession().getRecipeDao().load(recipeId);
 
                 ingredients = recipe.getIngredients();

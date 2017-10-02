@@ -116,17 +116,13 @@ public class StepFragment extends Fragment implements StepContracts.View {
         presenter.start();
     }
 
-
     @Override
-    public void onDestroy() {
+    public void onStop() {
+        super.onStop();
+
         Picasso.with(getContext())
                 .cancelRequest(thumbnailTarget);
-        super.onDestroy();
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
         if (!getActivity().isChangingConfigurations()) {
             releasePlayer();
         }

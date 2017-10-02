@@ -25,10 +25,12 @@ public class PiCrustWidget extends AppWidgetProvider {
 
         // Construct the RemoteViews object
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        long recipeId = preferences.getLong(context.getString(R.string.last_accessed_recipe_key), -1);
+        long recipeId = preferences.getLong(context.getString(R.string.widget_recipe_id_key), -1);
+        String recipeName = preferences.getString(context.getString(R.string.widget_recipe_name_key), context.getString(R.string.app_name));
 
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.pi_crust_widget);
+        views.setTextViewText(R.id.text_view_app_name, recipeName);
 
         if (recipeId != -1) {
             Intent remoteViewIntent = new Intent(context, PiCrustRemoteViewsService.class);

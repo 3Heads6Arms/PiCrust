@@ -1,9 +1,7 @@
 package com.anhhoang.picrust.ui.recipes;
 
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
@@ -150,12 +148,6 @@ public class RecipesActivity extends AppCompatActivity implements RecipesContrac
 
     @Override
     public void showRecipeDetail(long recipeId) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences
-                .edit()
-                .putLong(getString(R.string.last_accessed_recipe_key), recipeId)
-                .commit();
-
         startActivity(RecipeDetailActivity.getStartingIntent(this, recipeId));
     }
 
