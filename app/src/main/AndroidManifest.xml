@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
     package="com.anhhoang.picrust">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -9,7 +11,59 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.recipes.RecipesActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.recipedetails.RecipeDetailActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.recipes.RecipesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.anhhoang.picrust.ui.recipes.RecipesActivity" />
+        </activity>
+        <activity
+            android:name=".ui.ingredients.IngredientsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.recipedetails.RecipeDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.anhhoang.picrust.ui.recipedetails.RecipeDetailActivity" />
+        </activity>
+        <activity
+            android:name=".ui.step.StepActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.recipedetails.RecipeDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.anhhoang.picrust.ui.recipedetails.RecipeDetailActivity" />
+        </activity>
+
+        <receiver android:name=".widgets.PiCrustWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pi_crust_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".widgets.PiCrustRemoteViewsService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
