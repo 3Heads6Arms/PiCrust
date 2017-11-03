@@ -19,15 +19,20 @@ import android.widget.TextView;
 import com.anhhoang.picrust.R;
 import com.anhhoang.picrust.data.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
@@ -82,6 +87,8 @@ public class StepFragment extends Fragment implements StepContracts.View {
     };
     private View view;
 
+    private long playbackPosition;
+
     public StepFragment() {
         setRetainInstance(true);
     }
@@ -118,15 +125,16 @@ public class StepFragment extends Fragment implements StepContracts.View {
 
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
+        super.onStop();
+
         Picasso.with(getContext())
                 .cancelRequest(thumbnailTarget);
-        super.onDestroy();
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+        if (stepExoPlayer != null) {
+            playbackPosition = stepExoPlayer.getCurrentPosition();
+        }
+
         if (!getActivity().isChangingConfigurations()) {
             releasePlayer();
         }
@@ -209,9 +217,47 @@ public class StepFragment extends Fragment implements StepContracts.View {
                 null);
 
         stepExoPlayer.prepare(mediaSource);
-        stepExoPlayer.setPlayWhenReady(false);
+        stepExoPlayer.addListener(new ExoPlayer.EventListener() {
+            @Override
+            public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+            }
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                if (playbackState == ExoPlayer.STATE_ENDED) {
+                    stepExoPlayer.seekTo(0);
+                    stepExoPlayer.setPlayWhenReady(false);
+                }
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+
+            }
+
+            @Override
+            public void onPositionDiscontinuity() {
+
+            }
+        });
 
         stepPlayerView.setPlayer(stepExoPlayer);
+
+        if (playbackPosition > 0) {
+            stepExoPlayer.seekTo(playbackPosition);
+            playbackPosition = 0;
+        }
     }
 
     private void releasePlayer() {
